@@ -10,13 +10,13 @@ import { Task } from "./task";
 
 @Entity()
 export class Tracking {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: "text", nullable: true })
   description: string;
 
   @Column()
@@ -31,6 +31,6 @@ export class Tracking {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => Task, (task) => task.trackings, {nullable: false})
+  @ManyToOne(() => Task, (task) => task.trackings, { nullable: false })
   task: Task;
 }

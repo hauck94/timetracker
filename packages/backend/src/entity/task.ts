@@ -1,4 +1,3 @@
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,13 +12,13 @@ import { Tracking } from "./tracking";
 
 @Entity()
 export class Task {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
   name: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: "text", nullable: true })
   description: string;
 
   @CreateDateColumn()
@@ -28,10 +27,9 @@ export class Task {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Tracking, (trackings) => trackings.id, {nullable: true})
+  @OneToMany(() => Tracking, (trackings) => trackings.id, { nullable: true })
   trackings: Tracking[];
 
-  
-  @ManyToMany(() => Label, label => label.tasks, {nullable: true})
+  @ManyToMany(() => Label, (label) => label.tasks, { nullable: true })
   labels: Label[];
 }
