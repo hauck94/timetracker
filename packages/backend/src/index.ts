@@ -12,7 +12,6 @@ export const startServer = async () => {
     const dbConnection = await createDatabaseConnection();
     app.get('/', async (_: Request, res: Response) => {
       res.send('Due mieser');
-
     });
 
     const server = app.listen(port, () => console.log(`Server is running on port ${port}`));

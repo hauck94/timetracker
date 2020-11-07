@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+} from "typeorm";
+import { Task } from "./task";
 
 @Entity()
 export class Tracking {
@@ -8,7 +16,7 @@ export class Tracking {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column()
@@ -19,7 +27,10 @@ export class Tracking {
 
   @CreateDateColumn()
   created: string;
-  
+
   @UpdateDateColumn()
   updatedAt: string;
+
+  @ManyToOne(() => Task, (task) => task.trackings, {nullable: false})
+  task: Task;
 }
