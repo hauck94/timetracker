@@ -2,6 +2,7 @@ import { Router } from "express";
 import { taskRouter } from "./task.router";
 import { Request, Response } from "express";
 import { labelRouter } from "./label.router";
+import { trackingRouter } from "./tracking.router";
 
 
 export const globalRouter = Router({ mergeParams: true });
@@ -15,3 +16,4 @@ globalRouter.get("/", async (_: Request, res: Response) => {
 //leitet zu task Router weiter
 globalRouter.use('/task', taskRouter);
 globalRouter.use('/label', labelRouter);
+globalRouter.use('/tracking', trackingRouter);
