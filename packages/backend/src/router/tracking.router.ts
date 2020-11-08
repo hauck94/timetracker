@@ -13,7 +13,7 @@ export const trackingRouter = Router({ mergeParams: true });
 trackingRouter.get("/", getTrackings);
 
 // create 
-trackingRouter.post("/", createTracking);
+trackingRouter.post("/:taskId", createTracking);
 
 // get single 
 trackingRouter.get("/:trackingId", getTracking);

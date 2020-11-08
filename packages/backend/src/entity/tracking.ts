@@ -31,6 +31,7 @@ export class Tracking {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => Task, (task) => task.trackings, { nullable: false })
+  // delete cascade, da tracking nicht ohne Task existieren kann und somit mit gelöscht werden soll
+  @ManyToOne(() => Task, (task) => task.trackings, { nullable: false, onDelete: 'CASCADE'})
   task: Task;
 }

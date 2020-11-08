@@ -27,7 +27,7 @@ export class Task {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Tracking, (trackings) => trackings.id, { nullable: true })
+  @OneToMany(() => Tracking, (trackings) => trackings.id, { nullable: true})
   trackings: Tracking[];
 
   @ManyToMany(() => Label, (label) => label.tasks, { nullable: true })
