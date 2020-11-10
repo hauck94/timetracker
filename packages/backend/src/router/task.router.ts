@@ -21,5 +21,5 @@ taskRouter.delete("/:taskId", deleteTask);
 taskRouter.patch("/:taskId", patchTask);
 
 // add Labels 
-taskRouter.patch("/:taskId/:labelId", patchLabel);
+taskRouter.patch("/:taskId/label/:labelId", patchLabel)
 

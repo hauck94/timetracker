@@ -17,7 +17,6 @@ export const createTask = async (req: Request, res: Response) => {
   let task = new Task();
   task.name = name;
   task.description = description;
-  task.labels = [];
   const taskRepository = await getRepository(Task);
   const createdTask = await taskRepository.save(task);
 
@@ -88,7 +87,7 @@ export const patchLabel = async (req: Request, res: Response) => {
 
     let label = await labelRepository.findOneOrFail(labelId);
 
-    task.labels.push(label); // task.labels is undefined
+    task.labels.push(label);
 
     task = await taskRepository.save(task);
     console.log(task);

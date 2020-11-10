@@ -31,7 +31,7 @@ export class Task {
   @OneToMany(() => Tracking, (tracking) => tracking.id, { nullable: true})
   trackings: Tracking[];
 
-  @ManyToMany(() => Label, (label) => label.tasks, {nullable: true})
+  @ManyToMany(() => Label, (label) => label.tasks, {nullable: true, eager: true})
   @JoinTable()
   labels: Label[];
 }
