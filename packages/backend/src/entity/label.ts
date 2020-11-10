@@ -4,8 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinTable,
-  ManyToMany,
+  ManyToMany
 } from "typeorm";
 import { Task } from "./task";
 
@@ -24,6 +23,5 @@ export class Label {
   updatedAt: string;
 
   @ManyToMany(() => Task, (task) => task.labels, { nullable: true })
-  @JoinTable() // owner side of the relationship.
   tasks: Task[];
 }

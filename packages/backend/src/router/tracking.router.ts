@@ -9,17 +9,17 @@ import {
 
 export const trackingRouter = Router({ mergeParams: true });
 
-//get all 
+//get all
 trackingRouter.get("/", getTrackings);
 
-// create 
+// create
 trackingRouter.post("/:taskId", createTracking);
 
-// get single 
+// get single
 trackingRouter.get("/:trackingId", getTracking);
 
-// delete single 
+// delete single
 trackingRouter.delete("/:trackingId", deleteTracking);
 
-// patch single 
+// patch single
 trackingRouter.patch("/:trackingId", patchTracking);

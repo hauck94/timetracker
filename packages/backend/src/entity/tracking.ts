@@ -10,7 +10,7 @@ import { Task } from "./task";
 
 @Entity()
 export class Tracking {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: number;
 
   @Column()
@@ -19,7 +19,11 @@ export class Tracking {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true})
+  @Column({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    nullable: true,
+  })
   startTime: string;
 
   @Column({ type: "timestamp", precision: 6, nullable: true })
@@ -32,6 +36,9 @@ export class Tracking {
   updatedAt: string;
 
   // delete cascade, da tracking nicht ohne Task existieren kann und somit mit gelöscht werden soll
-  @ManyToOne(() => Task, (task) => task.trackings, { nullable: false, onDelete: 'CASCADE'})
+  @ManyToOne(() => Task, (task) => task.trackings, {
+    nullable: false,
+    onDelete: "CASCADE",
+  })
   task: Task;
 }

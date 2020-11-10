@@ -12,8 +12,8 @@ export const getTrackings = async (_: Request, res: Response) => {
 };
 
 export const createTracking = async (req: Request, res: Response) => {
-  let { name, description} = req.body;
-  const taskId =  req.params.taskId;
+  let { name, description } = req.body;
+  const taskId = req.params.taskId;
   const taskRepository = await getRepository(Task);
   try {
     const task = await taskRepository.findOneOrFail(taskId);
@@ -24,7 +24,8 @@ export const createTracking = async (req: Request, res: Response) => {
     tracking.task = task;
 
     const trackingRepository = await getRepository(Tracking);
-  const createdTracking = await trackingRepository.save(tracking);
+    const createdTracking = await trackingRepository.save(tracking);
+    
     res.send({
       data: createdTracking,
     });
