@@ -3,7 +3,7 @@ import { Task } from './task';
 
 @Entity()
 export class Label {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()

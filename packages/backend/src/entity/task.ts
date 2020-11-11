@@ -13,7 +13,7 @@ import { Tracking } from "./tracking";
 
 @Entity()
 export class Task {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
