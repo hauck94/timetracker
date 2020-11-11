@@ -28,8 +28,9 @@ export class Task {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Tracking, (tracking) => tracking.id, {
-    nullable: true
+  @OneToMany(() => Tracking, (tracking) => tracking.task, {
+    nullable: true,
+    eager: true
   })
   trackings: Tracking[];
 

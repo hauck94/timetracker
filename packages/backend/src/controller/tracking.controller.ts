@@ -23,10 +23,10 @@ export const createTracking = async (req: Request, res: Response) => {
     tracking.name = name;
     tracking.description = description;
     tracking.task = task;
-    task.trackings.push(tracking);
-
+    console.log("test");
     const createdTracking = await trackingRepository.save(tracking);
-    await taskRepository.save(task);
+    console.log(createdTracking);
+    console.log("test 3");
     res.send({
       data: createdTracking,
     });

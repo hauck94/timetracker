@@ -17,11 +17,10 @@ export const createTask = async (req: Request, res: Response) => {
   let task = new Task();
   task.name = name;
   task.description = description;
-  task.labels = [];
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
   try {
-    if (label != undefined && !label.empty) {
+    if (label != undefined && label.length > 0) {
       const labels = await labelRepository.findByIds(label);
       task.labels.push(...labels);
     }
