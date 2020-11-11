@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
 import { Label } from "../entity/label";
 import { Request, Response } from "express";
+import { Task } from "../entity/task";
 
 export const getLabels = async (_: Request, res: Response) => {
   const labelRepository = await getRepository(Label);
@@ -76,11 +77,20 @@ export const patchLabel = async (req: Request, res: Response) => {
 
 export const getTasks = async (req: Request, res: Response) => {
   const labelId = req.params.labelId;
-  const labelRepository = await getRepository(Label);
+  const labelsWithTasks= await getRepository(Task).createQueryBuilder("task").leftJoinAndSelect("task.labels", "label").getMany();
+  
   try {
-    const label = await labelRepository.findOneOrFail(labelId);
+    let tasks : Task[] = [];
+     labelsWithTasks.forEach(element => {
+      element.labels.forEach(label => {
+        if(String(label.id)== labelId){
+          tasks.push(element);
+        }
+      });
+    });
+    console.log(tasks);
     res.send({
-      data: label.tasks,
+      data: tasks,
     });
   } catch (error) {
     res.status(404).send({
