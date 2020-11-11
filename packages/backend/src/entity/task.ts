@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToMany,
-  JoinTable
+  JoinTable,
 } from "typeorm";
 import { Label } from "./label";
 import { Tracking } from "./tracking";
@@ -28,10 +28,15 @@ export class Task {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Tracking, (tracking) => tracking.id, { nullable: true, eager: true})
+  @OneToMany(() => Tracking, (tracking) => tracking.id, {
+    nullable: true
+  })
   trackings: Tracking[];
 
-  @ManyToMany(() => Label, (label) => label.tasks, {nullable: true, eager: true})
+  @ManyToMany(() => Label, (label) => label.tasks, {
+    nullable: true,
+    eager: true,
+  })
   @JoinTable()
   labels: Label[];
 }

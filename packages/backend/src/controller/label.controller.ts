@@ -73,3 +73,18 @@ export const patchLabel = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getTasks = async (req: Request, res: Response) => {
+  const labelId = req.params.labelId;
+  const labelRepository = await getRepository(Label);
+  try {
+    const label = await labelRepository.findOneOrFail(labelId);
+    res.send({
+      data: label.tasks,
+    });
+  } catch (error) {
+    res.status(404).send({
+      status: "not_found",
+    });
+  }
+};

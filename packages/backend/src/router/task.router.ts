@@ -7,7 +7,8 @@ import {
   patchLabel,
   patchTask,
   getLabels,
-  getTrackings
+  getTrackings,
+  deleteLabel
 } from "../controller/task.controller";
 
 export const taskRouter = Router({ mergeParams: true });
@@ -31,3 +32,7 @@ taskRouter.get("/:taskId/labels", getLabels);
 
 //TODO get Trackings 
 taskRouter.get("/:taskId/trackings", getTrackings);
+
+
+// delete singel or multiple label(s)
+taskRouter.delete("/:trackingId/label", deleteLabel);

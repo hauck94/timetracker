@@ -68,9 +68,7 @@ export const deleteTracking = async (req: Request, res: Response) => {
 
 export const patchTracking = async (req: Request, res: Response) => {
   const trackingId = req.params.trackingId;
-
   let { name, description } = req.body;
-
   const trackingRepository = await getRepository(Tracking);
   try {
     let tracking = await trackingRepository.findOneOrFail(trackingId);

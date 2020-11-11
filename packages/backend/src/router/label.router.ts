@@ -5,6 +5,7 @@ import {
   getLabel,
   deleteLabel,
   patchLabel,
+  getTasks,
 } from "../controller/label.controller";
 
 export const labelRouter = Router({ mergeParams: true });
@@ -23,3 +24,6 @@ labelRouter.delete("/:labelId", deleteLabel);
 
 // patch single Task
 labelRouter.patch("/:labelId", patchLabel);
+
+// get all tasks
+labelRouter.get("/:labelId", getTasks);

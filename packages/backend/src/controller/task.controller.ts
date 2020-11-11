@@ -12,7 +12,7 @@ export const getTasks = async (_: Request, res: Response) => {
 };
 
 export const createTask = async (req: Request, res: Response) => {
-  let { name, description, labelIds } = req.body;
+  let { name, description, label } = req.body;
 
   let task = new Task();
   task.name = name;
@@ -21,9 +21,8 @@ export const createTask = async (req: Request, res: Response) => {
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
   try {
-    
-    if(labelIds != undefined && !labelIds.empty){
-      const labels = await labelRepository.findByIds(labelIds);
+    if (label != undefined && !label.empty) {
+      const labels = await labelRepository.findByIds(label);
       task.labels.push(...labels);
     }
     const createdTask = await taskRepository.save(task);
@@ -69,17 +68,18 @@ export const deleteTask = async (req: Request, res: Response) => {
 export const patchTask = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
 
-  let { name, description, labelIds } = req.body;
+  let { name, description, label } = req.body;
 
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
   try {
     let task = await taskRepository.findOneOrFail(taskId);
+    
     task.name = name;
     task.description = description;
 
-    if(labelIds != undefined && !labelIds.empty){
-      const labels = await labelRepository.findByIds(labelIds);
+    if (label != undefined && !label.empty) {
+      const labels = await labelRepository.findByIds(label);
       task.labels.push(...labels);
     }
 
@@ -121,7 +121,6 @@ export const patchLabel = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getLabels = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
 
@@ -141,7 +140,6 @@ export const getLabels = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getTrackings = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
 
@@ -155,6 +153,48 @@ export const getTrackings = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
 
+    res.status(404).send({
+      status: "not_found",
+    });
+  }
+};
+
+export const deleteLabel = async (req: Request, res: Response) => {
+  const taskId = req.params.trackingId;
+  let { label } = req.body;
+  const taskRepository = await getRepository(Task);
+  const labelRepository = await getRepository(Label);
+  let atleastOneLabel = false;
+  try {
+    let task = await taskRepository.findOneOrFail(taskId);
+
+    if (label != undefined && !label.empty && task.labels.length > 0) {
+      const labels = await labelRepository.findByIds(label);
+      // filtering labels
+      //task.labels= task.labels.filter((obj) => !labels.includes(obj));
+      labels.forEach((element) => {
+        task.labels.forEach((label) => {
+          if (label.id == element.id) {
+            const index = task.labels.indexOf(label);
+            if (index > -1) {
+              task.labels.splice(index, 1);
+              atleastOneLabel = true;
+            }
+          }
+        });
+      });
+      if (atleastOneLabel) {
+        await taskRepository.save(task);
+        console.log("filtering", task.labels);
+      } else {
+        throw Error();
+      }
+    } else {
+      throw Error();
+    }
+
+    res.send({});
+  } catch (error) {
     res.status(404).send({
       status: "not_found",
     });
