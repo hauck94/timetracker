@@ -15,3 +15,7 @@ Start containers
 Sync database schema
 
 - `docker-compose exec backend npm run typeorm schema:sync`
+
+Fixtures
+
+- `docker-compose exec backend npm run fixtures`

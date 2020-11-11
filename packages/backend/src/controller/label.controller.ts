@@ -91,7 +91,6 @@ export const getTasks = async (req: Request, res: Response) => {
         }
       });
     });
-    console.log(tasks);
     res.send({
       data: tasks,
     });

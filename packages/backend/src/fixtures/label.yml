@@ -1,0 +1,8 @@
+entity: label
+items:
+  Uni:
+    name: 'Uni'
+  Haushalt:
+    name: 'Haushalt'
+  Fitness:
+    name: 'Fitness'

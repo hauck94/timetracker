@@ -8,7 +8,8 @@
     "start": "tsc-watch --outDir ./dist --onSuccess 'node --inspect=0.0.0.0:9229 ./dist/index'",
     "build": "tsc -b .",
     "lint": "tslint --project .",
-    "typeorm": "node ./node_modules/typeorm/cli.js"
+    "typeorm": "node ./node_modules/typeorm/cli.js",
+    "fixtures": "npx fixtures ./src/fixtures/ --config ormconfig.js"
   },
   "author": "Marcel Hauck",
   "license": "MIT",
@@ -31,6 +32,7 @@
     "tslint-config-airbnb": "^5.11.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-etc": "^1.13.7",
-    "tslint-plugin-prettier": "^2.3.0"
+    "tslint-plugin-prettier": "^2.3.0",
+    "typeorm-fixtures-cli": "^1.8.0"
   }
 }
