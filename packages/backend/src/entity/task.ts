@@ -30,7 +30,7 @@ export class Task {
 
   @OneToMany(() => Tracking, (tracking) => tracking.task, {
     nullable: true,
-    eager: true
+    eager: true,
   })
   trackings: Tracking[];
 

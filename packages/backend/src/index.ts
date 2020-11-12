@@ -15,7 +15,7 @@ export const startServer = async () => {
 
     app.use(bodyParser.json());
 
-    app.use('/api', globalRouter);
+    app.use("/api", globalRouter);
 
     const server = app.listen(port, () =>
       console.log(`Server is running on port ${port}`)

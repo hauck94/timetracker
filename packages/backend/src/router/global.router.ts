@@ -11,7 +11,7 @@ globalRouter.get("/", async (_: Request, res: Response) => {
 });
 
 // mergeParams true damit die parameter übergeben werden
-//leitet zu task Router weiter
+// leitet zu task Router weiter
 globalRouter.use("/task", taskRouter);
 globalRouter.use("/label", labelRouter);
 globalRouter.use("/tracking", trackingRouter);

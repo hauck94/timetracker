@@ -18,7 +18,7 @@ export const createTracking = async (req: Request, res: Response) => {
   const trackingRepository = await getRepository(Tracking);
   try {
     const task = await taskRepository.findOneOrFail(taskId);
-    
+
     let tracking = new Tracking();
     tracking.name = name;
     tracking.description = description;
