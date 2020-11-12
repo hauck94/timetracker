@@ -1,5 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, JoinTable, ManyToMany } from 'typeorm';
-import { Task } from './task';
+import { 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  Column, 
+  CreateDateColumn, 
+  UpdateDateColumn
+} from 'typeorm';
 
 @Entity()
 export class Label {
@@ -14,9 +19,4 @@ export class Label {
   
   @UpdateDateColumn()
   updatedAt: string;
-
-  
-  @ManyToMany(() => Task, task => task.labels, {nullable: true})
-  @JoinTable() // owner side of the relationship.
-  tasks: Task[];
 }

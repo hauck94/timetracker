@@ -4,12 +4,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-  ManyToMany,
+  UpdateDateColumn
 } from "typeorm";
-import { Label } from "./label";
-import { Tracking } from "./tracking";
+
 
 @Entity()
 export class Task {
@@ -27,11 +24,4 @@ export class Task {
 
   @UpdateDateColumn()
   updatedAt: string;
-
-  @OneToMany(() => Tracking, (trackings) => trackings.id, {nullable: true})
-  trackings: Tracking[];
-
-  
-  @ManyToMany(() => Label, label => label.tasks, {nullable: true})
-  labels: Label[];
 }

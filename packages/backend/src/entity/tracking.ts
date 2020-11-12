@@ -3,10 +3,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
+  UpdateDateColumn
 } from "typeorm";
-import { Task } from "./task";
 
 @Entity()
 export class Tracking {
@@ -30,7 +28,4 @@ export class Tracking {
 
   @UpdateDateColumn()
   updatedAt: string;
-
-  @ManyToOne(() => Task, (task) => task.trackings, {nullable: false})
-  task: Task;
 }
