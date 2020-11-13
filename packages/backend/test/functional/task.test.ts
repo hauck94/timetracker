@@ -180,7 +180,7 @@ describe("task", () => {
     const savedTask = await helper.getRepo(Task).save(task);
 
     request(helper.app)
-      .get(`${savedTask.id}/labels`)
+      .get(`/api/task/${savedTask.id}/labels`)
       .send({
         description: 'Updated Description',
         name: 'Updated Name',
