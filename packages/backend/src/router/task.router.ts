@@ -33,5 +33,5 @@ taskRouter.get("/:taskId/labels", getLabels);
 //TODO get Trackings
 taskRouter.get("/:taskId/trackings", getTrackings);
 
-// delete singel or multiple label(s)
+// TODO delete singel or multiple label(s)
 taskRouter.delete("/:trackingId/label", deleteLabel);
