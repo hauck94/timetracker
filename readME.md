@@ -19,3 +19,7 @@ Sync database schema
 Fixtures
 
 - `docker-compose exec backend npm run fixtures`
+
+Tests
+
+- `docker-compose exec backend npm run test`
