@@ -92,7 +92,6 @@ describe("task", () => {
 
       it("should be able to get a single Tracking by ID", async (done) => {
         await helper.resetDatabase();
-        await helper.resetDatabase();
 
         const task = new Task();
         task.name = "Test Task";
@@ -118,6 +117,50 @@ describe("task", () => {
           });
       });
 
+
+      it("should be able to delete a single Tracking by ID", async (done) => {
+        await helper.resetDatabase();
+
+        const task = new Task();
+        task.name = "Test Task";
+        task.description = "Task description";
+        const savedTask = await helper.getRepo(Task).save(task);
+
+        const tracking = new Tracking();
+        tracking.name = "Test Tracking";
+        tracking.task = savedTask;
+
+        const savedTracking = await helper.getRepo(Tracking).save(tracking);
+
+        request(helper.app)
+          .delete(`/api/tracking/${savedTracking.id}`)
+          .set("Content-Type", "application/json")
+          .set("Accept", "application/json")
+          .expect(200)
+          .end((err, res) => {
+            if (err) throw err;
+            expect(res.body.data).toBeUndefined;
+            done();
+          });
+      });
      
+    it("should not be able to create a new Tracking without Task", async (done) => {
+        await helper.resetDatabase();
+
+        request(helper.app)
+          .post(`/api/tracking`)
+          .send({
+              name: "Test Tracking",
+              description: "Test Tracking description"
+          })
+          .set("Content-Type", "application/json")
+          .set("Accept", "application/json")
+          .expect(404)
+          .end((err) => {
+            if (err) throw err;
+            done();
+          });
+      });
+
 
 })
