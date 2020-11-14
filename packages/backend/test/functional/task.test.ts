@@ -73,14 +73,11 @@ describe("task", () => {
   it("should be able to delete a Task", async (done) => {
     await helper.resetDatabase();
 
-    
-
     const task = new Task();
     task.name = "Test Task";
     task.description = "Das ist ein Test Task";
 
     const savedTask = await helper.getRepo(Task).save(task);
-
 
     request(helper.app)
       .delete(`/api/task/${savedTask.id}`)
@@ -95,7 +92,6 @@ describe("task", () => {
       });
   });
 
-  
   it("should be able to update a Task", async (done) => {
     await helper.resetDatabase();
 
@@ -108,21 +104,19 @@ describe("task", () => {
     request(helper.app)
       .patch(`/api/task/${savedTask.id}`)
       .send({
-        description: 'Updated Description',
-        name: 'Updated Name',
+        description: "Updated Description",
+        name: "Updated Name",
       })
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .expect(200)
       .end(async (err, res) => {
         if (err) throw err;
-        expect(res.body.data.name).toBe('Updated Name');
-        expect(res.body.data.description).toBe('Updated Description');
+        expect(res.body.data.name).toBe("Updated Name");
+        expect(res.body.data.description).toBe("Updated Description");
         done();
       });
-
   });
-
 
   it("should be able to get a single Task", async (done) => {
     await helper.resetDatabase();
@@ -136,8 +130,8 @@ describe("task", () => {
     request(helper.app)
       .get(`/api/task/${savedTask.id}`)
       .send({
-        description: 'Updated Description',
-        name: 'Updated Name',
+        description: "Updated Description",
+        name: "Updated Name",
       })
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
@@ -153,7 +147,6 @@ describe("task", () => {
       });
   });
 
- 
   it("should be able to get a all Labels from a single Task", async () => {
     await helper.resetDatabase();
 
@@ -166,8 +159,6 @@ describe("task", () => {
     const savedLabel1 = await helper.getRepo(Label).save(label1);
     const savedLabel2 = await helper.getRepo(Label).save(label2);
     const savedLabel3 = await helper.getRepo(Label).save(label3);
-
-
 
     const task = new Task();
     task.name = "Test Task";
@@ -182,13 +173,13 @@ describe("task", () => {
     request(helper.app)
       .get(`/api/task/${savedTask.id}/labels`)
       .send({
-        description: 'Updated Description',
-        name: 'Updated Name',
+        description: "Updated Description",
+        name: "Updated Name",
       })
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
-      .expect(200)
-      /* .end(async (err, res) => {
+      .expect(200);
+    /* .end(async (err, res) => {
         if (err) throw err;
         expect(res.body.data[0].id).toBe(savedLabel1.id);
         expect(res.body.data[1].id).toBe(savedLabel2.id);
@@ -197,5 +188,4 @@ describe("task", () => {
       });
       */
   });
-
 });
