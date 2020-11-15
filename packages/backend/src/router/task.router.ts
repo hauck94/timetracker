@@ -4,7 +4,6 @@ import {
   deleteTask,
   getTask,
   getTasks,
-  patchLabel,
   patchTask,
   getLabels,
   getTrackings,
@@ -24,14 +23,11 @@ taskRouter.delete("/:taskId", deleteTask);
 // possible to add label or multiple labels
 taskRouter.patch("/:taskId", patchTask);
 
-// add single Label
-taskRouter.patch("/:taskId/label/:labelId", patchLabel);
-
 // get Labels
-taskRouter.get("/:taskId/labels", getLabels);
+taskRouter.get("/labels/:taskId", getLabels);
 
 //TODO get Trackings
 taskRouter.get("/:taskId/trackings", getTrackings);
 
 // TODO delete singel or multiple label(s)
-taskRouter.delete("/:trackingId/label", deleteLabel);
+taskRouter.delete("/labels/:trackingId", deleteLabel);

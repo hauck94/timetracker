@@ -17,6 +17,7 @@ export const createTask = async (req: Request, res: Response) => {
   let task = new Task();
   task.name = name;
   task.description = description;
+  task.labels = [];
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
   try {
@@ -73,7 +74,7 @@ export const patchTask = async (req: Request, res: Response) => {
   const labelRepository = await getRepository(Label);
   try {
     let task = await taskRepository.findOneOrFail(taskId);
-    
+
     task.name = name;
     task.description = description;
 
@@ -93,33 +94,6 @@ export const patchTask = async (req: Request, res: Response) => {
   }
 };
 
-export const patchLabel = async (req: Request, res: Response) => {
-  const taskId = req.params.taskId;
-  const labelId = req.params.labelId;
-
-  const taskRepository = await getRepository(Task);
-  const labelRepository = await getRepository(Label);
-  try {
-    let task = await taskRepository.findOneOrFail(taskId);
-
-    let label = await labelRepository.findOneOrFail(labelId);
-
-    task.labels.push(label);
-
-    task = await taskRepository.save(task);
-    console.log(task);
-    res.send({
-      data: task,
-    });
-  } catch (error) {
-    console.log(error);
-
-    res.status(404).send({
-      status: "not_found",
-    });
-  }
-};
-
 export const getLabels = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
 
@@ -131,8 +105,6 @@ export const getLabels = async (req: Request, res: Response) => {
       data: task.labels,
     });
   } catch (error) {
-    console.log(error);
-
     res.status(404).send({
       status: "not_found",
     });
@@ -150,8 +122,6 @@ export const getTrackings = async (req: Request, res: Response) => {
       data: task.trackings,
     });
   } catch (error) {
-    console.log(error);
-
     res.status(404).send({
       status: "not_found",
     });
@@ -184,14 +154,12 @@ export const deleteLabel = async (req: Request, res: Response) => {
       });
       if (atleastOneLabel) {
         await taskRepository.save(task);
-        console.log("filtering", task.labels);
       } else {
         throw Error();
       }
     } else {
       throw Error();
     }
-
     res.send({});
   } catch (error) {
     res.status(404).send({

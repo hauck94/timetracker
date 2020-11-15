@@ -18,54 +18,26 @@ describe("task", () => {
     await helper.shutdown();
   });
 
-  it("should be able to create a new Task without Label and Trackings", async (done) => {
-    await helper.resetDatabase();
-    const task = new Task();
-    task.name = "Test Task";
-    task.description = "Das ist ein Test Task";
-    const savedTask = await helper.getRepo(Task).save(task);
-    request(helper.app)
-      .get("/api/task")
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json")
-      .expect(200)
-      .end((err, res) => {
-        if (err) throw err;
-        expect(res.body.data.length).toBe(1);
-        expect(res.body.data[0].name).toBe(savedTask.name);
-        expect(res.body.data[0].description).toBe(savedTask.description);
-        expect(res.body.data[0].id).toBe(savedTask.id);
-        done();
-      });
-  });
-
   it("should be able to create a new Task with Label", async (done) => {
     await helper.resetDatabase();
-
     const label = new Label();
     label.name = "Test Label";
     const savedLabel = await helper.getRepo(Label).save(label);
 
-    const task = new Task();
-    task.name = "Test Task";
-    task.description = "Das ist ein Test Task";
-    task.labels = [];
-    task.labels.push(savedLabel);
-    const savedTask = await helper.getRepo(Task).save(task);
-
     request(helper.app)
-      .get("/api/task")
+      .post("/api/task")
+      .send({
+        name: "Test Task",
+        description: "Test New Task Description",
+        label: [`${savedLabel.id}`],
+      })
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
-        expect(res.body.data.length).toBe(1);
-        expect(res.body.data[0].name).toBe(savedTask.name);
-        expect(res.body.data[0].description).toBe(savedTask.description);
-        expect(res.body.data[0].id).toBe(savedTask.id);
-        expect(res.body.data[0].labels[0].name).toBe(savedLabel.name);
-        expect(res.body.data[0].labels[0].id).toBe(savedLabel.id);
+        expect(res.body.data.name).toBe("Test Task");
+        expect(res.body.data.description).toBe("Test New Task Description");
         done();
       });
   });
@@ -99,6 +71,10 @@ describe("task", () => {
     task.name = "Test Task";
     task.description = "Das ist ein Test Task";
 
+    const label = new Label();
+    label.name = "Test Label";
+    const savedLabel = await helper.getRepo(Label).save(label);
+
     const savedTask = await helper.getRepo(Task).save(task);
 
     request(helper.app)
@@ -106,6 +82,7 @@ describe("task", () => {
       .send({
         description: "Updated Description",
         name: "Updated Name",
+        label: [`${savedLabel.id}`],
       })
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
@@ -118,6 +95,34 @@ describe("task", () => {
       });
   });
 
+  it("should not be able to update a Task with wrong ID", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Das ist ein Test Task";
+
+    const label = new Label();
+    label.name = "Test Label";
+    const savedLabel = await helper.getRepo(Label).save(label);
+
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    request(helper.app)
+      .patch(`/api/task/${savedTask.id + 1}`)
+      .send({
+        description: "Updated Description",
+        name: "Updated Name",
+        label: [`${savedLabel.id}`],
+      })
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end(async (err) => {
+        if (err) throw err;
+        done();
+      });
+  });
   it("should be able to get a single Task", async (done) => {
     await helper.resetDatabase();
 
@@ -129,10 +134,6 @@ describe("task", () => {
 
     request(helper.app)
       .get(`/api/task/${savedTask.id}`)
-      .send({
-        description: "Updated Description",
-        name: "Updated Name",
-      })
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .expect(200)
@@ -143,6 +144,117 @@ describe("task", () => {
         expect(res.body.data.description).toBe(savedTask.description);
         expect(res.body.data.created).toBeDefined();
         expect(res.body.data.updatedAt).toBeDefined();
+        done();
+      });
+  });
+
+  it("should be able to delete Labels from a Task", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Das ist ein Test Task";
+    task.labels = [];
+
+    const label1 = new Label();
+    const label2 = new Label();
+    const label3 = new Label();
+    label1.name = "Label 1";
+    label2.name = "Label 2";
+    label3.name = "Label 3";
+
+    const savedLabel1 = await helper.getRepo(Label).save(label1);
+    const savedLabel2 = await helper.getRepo(Label).save(label2);
+    const savedLabel3 = await helper.getRepo(Label).save(label3);
+
+    task.labels.push(savedLabel1, savedLabel2, savedLabel3);
+
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    request(helper.app)
+      .delete(`/api/task/labels/${savedTask.id}`)
+      .send({
+        // Problem wie kann man einen array übergeben
+        // "[`${savedLabel1.id}, ${savedLabel2.id}, ${savedLabel3.id}`]"
+        label: `${savedLabel1.id}`,
+      })
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(200)
+      .end(async (err) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it("should be able to get all Labels from a single Task", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Das ist ein Test Task";
+    task.labels = [];
+
+    const label1 = new Label();
+    const label2 = new Label();
+    const label3 = new Label();
+    label1.name = "Label 1";
+    label2.name = "Label 2";
+    label3.name = "Label 3";
+
+    const savedLabel1 = await helper.getRepo(Label).save(label1);
+    const savedLabel2 = await helper.getRepo(Label).save(label2);
+    const savedLabel3 = await helper.getRepo(Label).save(label3);
+
+    task.labels.push(savedLabel1, savedLabel2, savedLabel3);
+
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    request(helper.app)
+      .get(`/api/task/labels/${savedTask.id}`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(200)
+      .end(async (err, res) => {
+        if (err) throw err;
+        expect(res.body.data.length).toBe(3);
+        // PROBLEM saving speichert nicht die richtige reihenfolge des Arrays!!
+        // expect(res.body.data[0].name).toBe(savedLabel1.name || savedLabel2.name || savedLabel2.name);
+        // expect(res.body.data[1].name).toBe(savedLabel1.name || savedLabel2.name || savedLabel2.name);
+        // expect(res.body.data[2].name).toBe(savedLabel1.name || savedLabel2.name || savedLabel2.name);
+        done();
+      });
+  });
+
+  it("should not be able to get a single Task with wrong ID", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Das ist ein Test Task";
+
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    request(helper.app)
+      .get(`/api/task/${savedTask.id + 1}`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end(async (err) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it("should not be able to delete a single Task with wrong ID", async (done) => {
+    await helper.resetDatabase();
+    request(helper.app)
+      .delete("/api/task/WRONGID=1")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end(async (err) => {
+        if (err) throw err;
         done();
       });
   });
@@ -187,5 +299,21 @@ describe("task", () => {
        done();
       });
       */
+  });
+
+  it("should be able to get all Tasks", async (done) => {
+    await helper.resetDatabase();
+    await helper.loadFixtures();
+
+    request(helper.app)
+      .get("/api/task")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(200)
+      .end(async (err, res) => {
+        if (err) throw err;
+        expect(res.body.data.length).toBe(5);
+        done();
+      });
   });
 });
