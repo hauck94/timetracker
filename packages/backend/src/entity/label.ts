@@ -3,8 +3,10 @@ import {
   PrimaryGeneratedColumn, 
   Column, 
   CreateDateColumn, 
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToMany
 } from 'typeorm';
+import { Task } from './task';
 
 @Entity()
 export class Label {
@@ -19,4 +21,8 @@ export class Label {
   
   @UpdateDateColumn()
   updatedAt: string;
+
+  // Ein Label kann 0 oder N Tasks haben und ein Task kann 0 oder N Labels haben
+  @ManyToMany(() => Task, {nullable : true})
+    tasks: Task[];
 }

@@ -1,5 +1,6 @@
 import { getRepository } from 'typeorm';
 import { Tracking } from '../entity/tracking';
+import { Task } from '../entity/task';
 import { Request, Response } from 'express';
 
 
@@ -14,16 +15,28 @@ export const getTrackings = async (_: Request, res: Response) => {
 export const createTracking = async (req: Request, res: Response) => {
     const {name, description} = req.body;
 
-    const tracking = new Tracking();
-    tracking.name = name;
-    tracking.description = description;
-
-    const trackingRepository = await getRepository(Tracking);
-    const createdTracking = await trackingRepository.save(tracking);
-    res.send({
+    const taskId = req.params.trackingId;
+    const taskRepository = await getRepository(Task);
+        
+    try {
+      const task = await taskRepository.findOneOrFail(taskId);
+      const tracking = new Tracking();
+      tracking.name = name;
+      tracking.description = description;
+      tracking.task = task;
+      const trackingRepository = await getRepository(Tracking);
+      const createdTracking = await trackingRepository.save(tracking);
+      res.send({
       data: createdTracking,
-    });
+      });
+    
+    }
+    catch (e) {
+      res.status(404).send({
+          status: 'not found',
+      });
   }
+};
 
   export const getTracking = async (req: Request, res: Response) => {
     const trackingId = req.params.trackingId;

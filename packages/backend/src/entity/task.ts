@@ -4,8 +4,14 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
+import { Tracking } from "./tracking";
+import { Label } from "./label";
+
 
 
 @Entity()
@@ -24,4 +30,13 @@ export class Task {
 
   @UpdateDateColumn()
   updatedAt: string;
+
+  @OneToMany(() => Tracking, trackings => trackings.task, {nullable : true})
+  trackings: Tracking[];
+
+  @ManyToMany(() => Label, {
+    nullable : true 
+  })
+    @JoinTable()
+    labels: Label[];
 }

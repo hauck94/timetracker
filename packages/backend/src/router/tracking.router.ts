@@ -15,7 +15,7 @@ export const trackingRouter = Router({ mergeParams: true });
     trackingRouter.get('/', getTrackings);
   
     //transaktion anlegen
-    trackingRouter.post('/', createTracking);
+    trackingRouter.post('/:taskId', createTracking);
   
     //bestimmte transaktion über id anzeigen
     trackingRouter.get('/:trackingId', getTracking);

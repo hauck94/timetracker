@@ -3,8 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToOne
 } from "typeorm";
+import { Task } from "./task";
 
 @Entity()
 export class Tracking {
@@ -17,10 +19,14 @@ export class Tracking {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column()
+  @Column({
+    default: 'today',
+})
   startTime: string;
 
-  @Column()
+  @Column({
+    default: 'tomorrow',
+})
   endTime: string;
 
   @CreateDateColumn()
@@ -28,4 +34,11 @@ export class Tracking {
 
   @UpdateDateColumn()
   updatedAt: string;
+
+  // Ein Tracking gehört immer zu einem Task. Ein Task kann 0 oder N Trackings haben.
+  @ManyToOne(() => Task, task => task.trackings)
+  task: Task;  
+
+
+
 }
