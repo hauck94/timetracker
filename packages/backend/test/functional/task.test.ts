@@ -6,6 +6,7 @@ import { Helper } from "../helper";
 import { Task } from "../../src/entity/task";
 import request from "supertest";
 import { Label } from "../../src/entity/label";
+import { Tracking } from "../../src/entity/tracking";
 
 describe("task", () => {
   const helper = new Helper();
@@ -38,6 +39,22 @@ describe("task", () => {
         if (err) throw err;
         expect(res.body.data.name).toBe("Test Task");
         expect(res.body.data.description).toBe("Test New Task Description");
+        done();
+      });
+  });
+
+  it("should not be able to create a new Task without name", async (done) => {
+    await helper.resetDatabase();
+    const label = new Label();
+    label.name = "Test Label";
+
+    request(helper.app)
+      .post("/api/task")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end((err) => {
+        if (err) throw err;
         done();
       });
   });
@@ -187,6 +204,41 @@ describe("task", () => {
       });
   });
 
+  
+  it("should not be able to delete Labels from a Task without Label ID in Body", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Das ist ein Test Task";
+    task.labels = [];
+
+    const label1 = new Label();
+    const label2 = new Label();
+    const label3 = new Label();
+    label1.name = "Label 1";
+    label2.name = "Label 2";
+    label3.name = "Label 3";
+
+    const savedLabel1 = await helper.getRepo(Label).save(label1);
+    const savedLabel2 = await helper.getRepo(Label).save(label2);
+    const savedLabel3 = await helper.getRepo(Label).save(label3);
+
+    task.labels.push(savedLabel1, savedLabel2, savedLabel3);
+
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    request(helper.app)
+      .delete(`/api/task/labels/${savedTask.id}`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end(async (err) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
   it("should be able to get all Labels from a single Task", async (done) => {
     await helper.resetDatabase();
 
@@ -225,6 +277,97 @@ describe("task", () => {
         done();
       });
   });
+
+  
+  it("should not be able to get all Labels with wrong Task ID", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Das ist ein Test Task";
+    task.labels = [];
+
+    const label1 = new Label();
+    const label2 = new Label();
+    const label3 = new Label();
+    label1.name = "Label 1";
+    label2.name = "Label 2";
+    label3.name = "Label 3";
+
+    const savedLabel1 = await helper.getRepo(Label).save(label1);
+    const savedLabel2 = await helper.getRepo(Label).save(label2);
+    const savedLabel3 = await helper.getRepo(Label).save(label3);
+
+    task.labels.push(savedLabel1, savedLabel2, savedLabel3);
+
+    await helper.getRepo(Task).save(task);
+
+    request(helper.app)
+      .get(`/api/task/labels/WRONG_TASK_ID`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end(async (err) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it("should be able to get all Trackings from a single Task", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Das ist ein Test Task";
+
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    const tracking = new Tracking();
+    tracking.name = "Test Tracking";
+    tracking.task = task;
+
+    const savedTracking = await helper.getRepo(Tracking).save(tracking);
+
+    request(helper.app)
+      .get(`/api/task/trackings/${savedTask.id}`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(200)
+      .end(async (err, res) => {
+        if (err) throw err;
+        expect(res.body.data[0].id).toBe(savedTracking.id);
+        expect(res.body.data[0].name).toBe(savedTracking.name);
+        done();
+      });
+  });
+
+  
+  it("should not be able to get all Trackings with wrong Task ID", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Das ist ein Test Task";
+
+    await helper.getRepo(Task).save(task);
+
+    const tracking = new Tracking();
+    tracking.name = "Test Tracking";
+    tracking.task = task;
+
+    await helper.getRepo(Tracking).save(tracking);
+
+    request(helper.app)
+      .get(`/api/task/trackings/WRONG_TASK_ID`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end(async (err) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
 
   it("should not be able to get a single Task with wrong ID", async (done) => {
     await helper.resetDatabase();

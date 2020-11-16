@@ -113,11 +113,9 @@ export const getLabels = async (req: Request, res: Response) => {
 
 export const getTrackings = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
-
   const taskRepository = await getRepository(Task);
   try {
     let task = await taskRepository.findOneOrFail(taskId);
-
     res.send({
       data: task.trackings,
     });

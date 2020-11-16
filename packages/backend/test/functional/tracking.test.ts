@@ -41,6 +41,21 @@ describe("task", () => {
       });
   });
 
+  
+  it("should not be able to create a new Tracking without Body Data", async (done) => {
+    await helper.resetDatabase();
+
+    request(helper.app)
+      .post(`/api/tracking/NO_TASK`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end((err) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
   it("should be able to patch a Tracking", async (done) => {
     await helper.resetDatabase();
 
@@ -71,6 +86,36 @@ describe("task", () => {
         done();
       });
   });
+
+  it("should not be able to patch a Tracking with wrong ID", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Task description";
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    const tracking = new Tracking();
+    tracking.name = "Test Tracking";
+    tracking.task = savedTask;
+
+    await helper.getRepo(Tracking).save(tracking);
+
+    request(helper.app)
+      .patch(`/api/tracking/WRONG_ID`)
+      .send({
+        description: "Updated Description",
+        name: "Updated Name",
+      })
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end(async (err) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
 
   it("should be able to get all Trackings", async (done) => {
     await helper.resetDatabase();
@@ -115,6 +160,31 @@ describe("task", () => {
       });
   });
 
+  
+  it("should not be able to get a single Tracking with wrong ID", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Task description";
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    const tracking = new Tracking();
+    tracking.name = "Test Tracking";
+    tracking.task = savedTask;
+
+    await helper.getRepo(Tracking).save(tracking);
+    request(helper.app)
+      .get(`/api/tracking/WRONG_TASK_ID`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end((err) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
   it("should be able to delete a single Tracking by ID", async (done) => {
     await helper.resetDatabase();
 
@@ -137,6 +207,31 @@ describe("task", () => {
       .end((err, res) => {
         if (err) throw err;
         expect(res.body.data).toBeUndefined;
+        done();
+      });
+  });
+
+  it("should not be able to delete a single Tracking with wrong ID", async (done) => {
+    await helper.resetDatabase();
+
+    const task = new Task();
+    task.name = "Test Task";
+    task.description = "Task description";
+    const savedTask = await helper.getRepo(Task).save(task);
+
+    const tracking = new Tracking();
+    tracking.name = "Test Tracking";
+    tracking.task = savedTask;
+
+    await helper.getRepo(Tracking).save(tracking);
+
+    request(helper.app)
+      .delete(`/api/tracking/WRONG_ID`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .expect(404)
+      .end((err) => {
+        if (err) throw err;
         done();
       });
   });

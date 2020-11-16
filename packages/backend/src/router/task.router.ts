@@ -27,7 +27,7 @@ taskRouter.patch("/:taskId", patchTask);
 taskRouter.get("/labels/:taskId", getLabels);
 
 //TODO get Trackings
-taskRouter.get("/:taskId/trackings", getTrackings);
+taskRouter.get("/trackings/:taskId", getTrackings);
 
 // TODO delete singel or multiple label(s)
 taskRouter.delete("/labels/:trackingId", deleteLabel);
