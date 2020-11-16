@@ -77,20 +77,26 @@ export const patchLabel = async (req: Request, res: Response) => {
 
 export const getTasks = async (req: Request, res: Response) => {
   const labelId = req.params.labelId;
+  let doesLabelExist = false;
+  try {
   const labelsWithTasks = await getRepository(Task)
     .createQueryBuilder("task")
     .leftJoinAndSelect("task.labels", "label")
     .getMany();
 
-  try {
+  
     let tasks: Task[] = [];
     labelsWithTasks.forEach((element) => {
       element.labels.forEach((label) => {
         if (String(label.id) == labelId) {
           tasks.push(element);
+          doesLabelExist = true;
         }
       });
     });
+    if(!doesLabelExist){
+      throw Error();
+    }
     res.send({
       data: tasks,
     });

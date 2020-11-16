@@ -192,7 +192,7 @@ describe("task", () => {
       .delete(`/api/task/labels/${savedTask.id}`)
       .send({
         // Problem wie kann man einen array übergeben
-        // "[`${savedLabel1.id}, ${savedLabel2.id}, ${savedLabel3.id}`]"
+        // `[{${savedLabel1.id}}, {${savedLabel2.id}, {${savedLabel3.id}}]`
         label: `${savedLabel1.id}`,
       })
       .set("Content-Type", "application/json")

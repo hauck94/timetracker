@@ -26,4 +26,4 @@ labelRouter.delete("/:labelId", deleteLabel);
 labelRouter.patch("/:labelId", patchLabel);
 
 // get all tasks
-labelRouter.get("/:labelId/tasks", getTasks);
+labelRouter.get("/tasks/:labelId", getTasks);
