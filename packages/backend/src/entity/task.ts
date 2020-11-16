@@ -31,11 +31,15 @@ export class Task {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Tracking, trackings => trackings.task, {nullable : true})
+  @OneToMany(() => Tracking, (tracking) => tracking.task, {
+    nullable : true,
+    eager : true
+  })
   trackings: Tracking[];
 
   @ManyToMany(() => Label, {
-    nullable : true 
+    nullable : true,
+    eager : true  
   })
     @JoinTable()
     labels: Label[];

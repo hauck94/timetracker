@@ -18,7 +18,7 @@ export class Tracking {
 
   @Column({ type: 'text', nullable: true })
   description: string;
-
+/*
   @Column({
     default: 'today',
 })
@@ -28,7 +28,7 @@ export class Tracking {
     default: 'tomorrow',
 })
   endTime: string;
-
+*/
   @CreateDateColumn()
   created: string;
 
@@ -36,9 +36,9 @@ export class Tracking {
   updatedAt: string;
 
   // Ein Tracking gehört immer zu einem Task. Ein Task kann 0 oder N Trackings haben.
-  @ManyToOne(() => Task, task => task.trackings)
+  @ManyToOne(() => Task, (task) => task.trackings, {
+    nullable : false,
+    onDelete: "CASCADE",
+  })
   task: Task;  
-
-
-
 }

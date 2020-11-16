@@ -23,6 +23,6 @@ export class Label {
   updatedAt: string;
 
   // Ein Label kann 0 oder N Tasks haben und ein Task kann 0 oder N Labels haben
-  @ManyToMany(() => Task, {nullable : true})
+  @ManyToMany(() => Task, (task) => task.labels, {nullable : true})
     tasks: Task[];
 }
