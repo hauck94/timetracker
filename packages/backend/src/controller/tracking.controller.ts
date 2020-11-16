@@ -24,9 +24,12 @@ export const getTrackings = async (_: Request, res: Response) => {
       tracking.name = name;
       tracking.description = description;
       tracking.task = task;
+      // marcel
+      task.trackings.push(tracking);
+      await taskRepository.save(task);
+      // marcel end
       console.log("tracking:");
       console.log(tracking);
-      
       const createdTracking = await trackingRepository.save(tracking);
       console.log("createdTracking:");
       console.log(createdTracking);
