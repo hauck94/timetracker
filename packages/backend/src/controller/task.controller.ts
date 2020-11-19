@@ -127,7 +127,7 @@ export const getTrackings = async (req: Request, res: Response) => {
 };
 
 export const deleteLabel = async (req: Request, res: Response) => {
-  const taskId = req.params.trackingId;
+  const taskId = req.params.taskId;
   let { label } = req.body;
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
