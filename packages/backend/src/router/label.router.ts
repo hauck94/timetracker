@@ -4,7 +4,8 @@ import {
     getLabels,
     createLabel,
     deleteLabel,
-    patchLabel 
+    patchLabel,
+    getTasksOfLabel
 } from '../controller/label.controller';
 
 
@@ -19,10 +20,13 @@ export const labelRouter = Router({ mergeParams: true });
   
     //bestimmte transaktion über id anzeigen
     labelRouter.get('/:labelId', getLabel);
+
+    //bestimmte transaktion über id anzeigen
+    labelRouter.get('/tasks/:labelId', getTasksOfLabel);
       
     //transaktionen löschen
     labelRouter.delete('/:labelId', deleteLabel);
-  
+
     //transaktion updaten
     labelRouter.patch('/:labelId', patchLabel);
   
