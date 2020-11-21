@@ -63,10 +63,9 @@ export const DashboardPage = () => {
   return (
     <>
       <h1>Dashborad FWE</h1>
-
       <TaskList>
         {tasks.map((task) => (
-          <TaskItem task={task}></TaskItem>
+          <TaskItem key={task.id} task={task}></TaskItem>
         ))}
       </TaskList>
     </>
