@@ -5,8 +5,8 @@ export type Task = {
     id: number;
     name: string;
     description: string;
-    created: Date;
-    updatedAt: Date;
+    created: string;
+    updatedAt: string;
     trackings: Tracking[];
     labels: Label[];
   };
@@ -14,8 +14,8 @@ export type Task = {
   export type Label = {
     id: number;
     name: string;
-    created: Date;
-    updatedAt: Date;
+    created: string;
+    updatedAt: string;
     tasks: Task[];
   };
   
@@ -25,8 +25,8 @@ export type Task = {
     description: string;
     startTime: string;
     endTime: string;
-    created: Date;
-    updatedAt: Date;
+    created: string;
+    updatedAt: string;
     task: Task;
   };
 
