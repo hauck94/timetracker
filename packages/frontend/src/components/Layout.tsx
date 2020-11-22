@@ -51,9 +51,9 @@ export const Layout: React.FC = ({ children }) => {
               text-decoration: underline overline;
             `}
           >
-            AWD
+            Task S
           </span>
-          20
+          ystem
         </div>
         <NavigationList>
           <NavigationItem>Home</NavigationItem>
