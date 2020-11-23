@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/macro";
+import { Modal } from "../../components/Modal";
 import { AddButton } from "./components/AddButton";
 import { AddTaskForm } from "./components/AddTaskFrom";
 import { Task, TaskItem, TaskList } from "./components/TaskList";
@@ -7,7 +8,6 @@ import { Task, TaskItem, TaskList } from "./components/TaskList";
 export const DashboardPage = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [addTaskVisible, setAddTaskVisible] = useState(false);
-
 
   const fetchTask = async () => {
     const taskRequest = await fetch("/api/task", {
@@ -34,13 +34,21 @@ export const DashboardPage = () => {
           setAddTaskVisible(true);
         }}
       />
+
       {addTaskVisible && (
-        <AddTaskForm
+        <Modal
+          title="Edit Task"
+          onCancel={() => {
+            setAddTaskVisible(false);
+          }}
+        >
+           <AddTaskForm
           afterSubmit={() => {
             setAddTaskVisible(false);
             fetchTask();
           }}
         />
+        </Modal>
       )}
 
       <TaskList>
