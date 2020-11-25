@@ -26,6 +26,8 @@ services:
 
   frontend:
     image: node:13
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     working_dir: /var/app/frontend
     ports:
       - 3000:3000
@@ -33,3 +35,4 @@ services:
     stdin_open: true
     volumes:
       - ./packages/frontend:/var/app/frontend
+      

@@ -18,9 +18,7 @@ export const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Layout>
         <DashboardPage />
-      </Layout>
     </ThemeProvider>
   );
 };

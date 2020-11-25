@@ -2,33 +2,33 @@ import React from "react";
 import styled from "styled-components";
 
 export type Task = {
-    id: number;
-    name: string;
-    description: string;
-    created: string;
-    updatedAt: string;
-    trackings: Tracking[];
-    labels: Label[];
-  };
-  
-  export type Label = {
-    id: number;
-    name: string;
-    created: string;
-    updatedAt: string;
-    tasks: Task[];
-  };
-  
-  export type Tracking = {
-    id: number;
-    name: string;
-    description: string;
-    startTime: string;
-    endTime: string;
-    created: string;
-    updatedAt: string;
-    task: Task;
-  };
+  id: number;
+  name: string;
+  description: string;
+  created: string;
+  updatedAt: string;
+  trackings: Tracking[];
+  labels: Label[];
+};
+
+export type Label = {
+  id: number;
+  name: string;
+  created: string;
+  updatedAt: string;
+  tasks: Task[];
+};
+
+export type Tracking = {
+  id: number;
+  name: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+  created: string;
+  updatedAt: string;
+  task: Task;
+};
 
 const LabelList = styled.ul`
   list-style: none;
@@ -41,7 +41,7 @@ const LabelList = styled.ul`
     margin-right: 0.5rem;
     padding: 0.125rem;
     border-radius: 0.25rem;
-    background-color: ${(props) => props.theme.colors.primary}
+    background-color: ${(props) => props.theme.colors.primary};
     display: block;
     color: #333;
   }
@@ -58,7 +58,7 @@ const TrackingList = styled.ul`
     margin-right: 0.5rem;
     padding: 0.125rem;
     border-radius: 0.25rem;
-    background-color: ${(props) => props.theme.colors.primary}
+    background-color: ${(props) => props.theme.colors.primary};
     display: block;
     color: #333;
   }
@@ -137,9 +137,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
         <div>
           <TaskTitle>{name}</TaskTitle>
           <TaskDescription>{description}</TaskDescription>
-          <TaskDate>
-            {created && created.toLocaleString()}
-          </TaskDate>
+          <TaskDate>{created && created.toLocaleString()}</TaskDate>
         </div>
         <LabelList>
           {labels &&
@@ -148,12 +146,12 @@ export const TaskItem: React.FC<TaskItemProps> = ({
             })}
         </LabelList>
 
-            <TrackingList>
-            {trackings &&
+        <TrackingList>
+          {trackings &&
             trackings.map((tracking: Tracking) => {
               return <li key={tracking.name}>{tracking.task}</li>;
             })}
-            </TrackingList>
+        </TrackingList>
       </TaskFlex>
     </TaskItemStyle>
   );

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/macro";
+import { Layout } from "../../components/Layout";
 import { Modal } from "../../components/Modal";
+import { SelectInput } from "../../components/SelectInput";
 import { AddButton } from "./components/AddButton";
 import { AddTaskForm } from "./components/AddTaskFrom";
 import { Task, TaskItem, TaskList } from "./components/TaskList";
@@ -27,35 +29,67 @@ export const DashboardPage = () => {
 
   return (
     <>
-      <h1>Dashborad FWE</h1>
-
-      <AddButton
-        onClick={() => {
-          setAddTaskVisible(true);
-        }}
-      />
-
-      {addTaskVisible && (
-        <Modal
-          title="Edit Task"
-          onCancel={() => {
-            setAddTaskVisible(false);
-          }}
-        >
-           <AddTaskForm
-          afterSubmit={() => {
-            setAddTaskVisible(false);
-            fetchTask();
-          }}
+      <Layout>
+        <SelectInput
+          label="Tags"
+          options={[
+            { id: "1", label: "React" },
+            { id: "2", label: "Javascript" },
+          ]}
         />
-        </Modal>
-      )}
 
-      <TaskList>
-        {tasks.map((task) => (
-          <TaskItem key={task.id} task={task}></TaskItem>
-        ))}
-      </TaskList>
+        <div
+          css={`
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+          `}
+        >
+          <div>
+            <h2>Home</h2>
+            <p
+              css={`
+                font-size: 36px;
+                margin: 0;
+              `}
+            ></p>
+          </div>
+          <div
+            css={`
+              flex: 1;
+              justify-content: flex-end;
+              display: flex;
+              align-items: top;
+            `}
+          >
+            <AddButton
+              onClick={() => {
+                setAddTaskVisible(true);
+              }}
+            />
+          </div>
+        </div>
+        {addTaskVisible && (
+          <Modal
+            title="Add Task"
+            onCancel={() => {
+              setAddTaskVisible(false);
+            }}
+          >
+            <AddTaskForm
+              afterSubmit={() => {
+                setAddTaskVisible(false);
+                fetchTask();
+              }}
+            />
+          </Modal>
+        )}
+        <TaskList>
+          {tasks.map((task) => (
+            <TaskItem task={task} key={task.id}></TaskItem>
+          ))}
+        </TaskList>
+      </Layout>
     </>
   );
 };
