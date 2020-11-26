@@ -6,14 +6,13 @@ import { Label } from "../entity/label";
 export const getTasks = async (_: Request, res: Response) => {
   const taskRepository = await getRepository(Task);
   const tasks = await taskRepository.find();
-  // tslint:disable-next-line: prettier
   res.send({
     data: tasks,
   });
 };
 
 export const createTask = async (req: Request, res: Response) => {
-  const { name, description, label } = req.body;
+  const { name, description, labels } = req.body;
 
   const task = new Task();
   task.name = name;
@@ -22,9 +21,28 @@ export const createTask = async (req: Request, res: Response) => {
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
   try {
-    if (label !== undefined && label.length > 0) {
-      const labels = await labelRepository.findByIds(label);
-      task.labels.push(...labels);
+    const labelRepo = await labelRepository.find();
+    if (labels !== undefined && !labels.empty) {
+      labels.forEach(async (element: Label) => {
+        if (checkLabelExist(element.name, labelRepo)) {
+          labelRepo.forEach((label) => {
+            if (label.name === element.name) {
+              task.labels.push(label);
+            }
+          });
+        } else {
+          console.log("make new Label");
+
+          const newLabel = new Label();
+          newLabel.name = element.name;
+          const label = await labelRepository.save(newLabel);
+          console.log("new Label: ", newLabel);
+
+          task.labels.push(label);
+          await taskRepository.save(task);
+          console.log("task labels: ", task.labels);
+        }
+      });
     }
     const createdTask = await taskRepository.save(task);
     res.send({
@@ -47,7 +65,7 @@ export const getTask = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -67,11 +85,11 @@ export const deleteTask = async (req: Request, res: Response) => {
 };
 
 function checkLabelExist(name: string, labels: Label[]): boolean {
-  if(labels.some((label) => label.name === name)){
+  if (labels.some((label) => label.name === name)) {
     return true;
   }
   return false;
-};
+}
 
 export const patchTask = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
@@ -83,15 +101,15 @@ export const patchTask = async (req: Request, res: Response) => {
 
   try {
     let task = await taskRepository.findOneOrFail(taskId);
-    let labelRepo = await labelRepository.find();
+    const labelRepo = await labelRepository.find();
     task.name = name;
     task.description = description;
     task.labels = [];
-    if (labels != undefined && !labels.empty) {
+    if (labels !== undefined && !labels.empty) {
       labels.forEach(async (element: Label) => {
         if (checkLabelExist(element.name, labelRepo)) {
           labelRepo.forEach((label) => {
-            if (label.name == element.name ) {
+            if (label.name === element.name) {
               task.labels.push(label);
             }
           });
@@ -102,11 +120,10 @@ export const patchTask = async (req: Request, res: Response) => {
           newLabel.name = element.name;
           const label = await labelRepository.save(newLabel);
           console.log("new Label: ", newLabel);
-          
+
           task.labels.push(label);
           await taskRepository.save(task);
           console.log("task labels: ", task.labels);
-          
         }
       });
     }
@@ -163,7 +180,7 @@ export const deleteLabel = async (req: Request, res: Response) => {
   try {
     const task = await taskRepository.findOneOrFail(taskId);
 
-    if (label != undefined && !label.empty && task.labels.length > 0) {
+    if (label !== undefined && !label.empty && task.labels.length > 0) {
       const labels = await labelRepository.findByIds(label);
       // filtering labels
       // task.labels= task.labels.filter((obj) => !labels.includes(obj));

@@ -1,5 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
 import { Layout } from "../../components/Layout";
 import { Modal } from "../../components/Modal";
 import { AddButton } from "./components/AddButton";
@@ -7,10 +6,6 @@ import { AddTaskForm } from "./components/AddTaskForm";
 import { EditTaskForm } from "./components/EditTaskForm";
 import { Task, TaskItem, TaskList } from "./components/TaskList";
 
-const CurrentBalance = styled.div`
-  font-size: 14px;
-  color: ${(props) => props.theme.colors.secondaryFontColor};
-`;
 
 export default () => {
   const [addTaskVisible, setAddTaskVisible] = useState(false);
