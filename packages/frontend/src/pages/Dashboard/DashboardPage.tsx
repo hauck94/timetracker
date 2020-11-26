@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components/macro";
 import { Layout } from "../../components/Layout";
 import { Modal } from "../../components/Modal";
 import { SelectInput } from "../../components/SelectInput";
@@ -17,13 +16,13 @@ export const DashboardPage = () => {
     });
     if (taskRequest.status === 200) {
       const taskJSON = await taskRequest.json();
-      console.log(taskJSON);
       setTasks(taskJSON.data);
+      console.log("tasks", taskJSON);
     }
   };
+
   useEffect(() => {
     console.log("use effect");
-
     fetchTask();
   }, []);
 
@@ -37,7 +36,6 @@ export const DashboardPage = () => {
             { id: "2", label: "Javascript" },
           ]}
         />
-
         <div
           css={`
             display: flex;

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useReducer, useEffect } from "react";
 import styled from "styled-components";
 
 const InputLabel = styled.label`
@@ -135,82 +135,182 @@ const Tag = styled.div`
   }
 `;
 
-interface Option {
+export interface Option {
   label: string;
-  id: string;
+  id?: string;
 }
 
-export const SelectInput: React.FC<{ label: string; options: Option[] }> = ({
+export interface SelectState {
+  inputValue: string;
+  selectedOptions: Option[];
+}
+
+export type SelectAction =
+  | {
+      type: "change-input";
+      event: React.ChangeEvent<HTMLInputElement>;
+    }
+  | {
+      type: "remove-value";
+      value: Option;
+    }
+  | {
+      type: "select-value";
+      value: Option;
+    }
+  | {
+      type: "key-down";
+      event: React.KeyboardEvent<HTMLInputElement>;
+    };
+
+const createOption = (optionValue: string): Option => {
+  return {
+    label: optionValue,
+  };
+};
+export function initialReducer(
+  oldState: SelectState,
+  action: SelectAction
+): SelectState {
+  switch (action.type) {
+    case "change-input":
+      return { ...oldState, inputValue: action.event.target.value };
+    case "remove-value":
+      return {
+        ...oldState,
+        selectedOptions: oldState.selectedOptions.filter(
+          (selectedOption) => action.value.id !== selectedOption.id
+        ),
+      };
+    case "key-down":
+      if (action.event.key === "Enter") {
+        action.event.preventDefault();
+        if (
+          !oldState.selectedOptions.some(
+            (option) => option.label === oldState.inputValue
+          )
+        ) {
+          return {
+            ...oldState,
+            selectedOptions: [
+              ...oldState.selectedOptions,
+              createOption(oldState.inputValue),
+            ],
+            inputValue: "",
+          };
+        }
+      }
+      if (
+        action.event.key === "Backspace" &&
+        oldState.inputValue.length === 0
+      ) {
+        action.event.preventDefault();
+        return {
+          ...oldState,
+          selectedOptions: oldState.selectedOptions.splice(
+            0,
+            oldState.selectedOptions.length - 1
+          ),
+        };
+      }
+      return oldState;
+    case "select-value":
+      return {
+        ...oldState,
+        selectedOptions: [...oldState.selectedOptions, action.value],
+        inputValue: "",
+      };
+
+    default:
+      return oldState;
+  }
+}
+
+const initialFilterOptions = (
+  options: Option[],
+  filterValue: string,
+  selectedOptions: Option[]
+): Option[] => {
+  return options
+    .filter((option) =>
+      option.label.toLowerCase().includes(filterValue.toLowerCase())
+    )
+    .filter(
+      (option) =>
+        !selectedOptions.some((selectedOption) =>
+          selectedOption.label
+            .toLowerCase()
+            .includes(option.label.toLowerCase())
+        )
+    );
+};
+
+export type LabelProps = {
+  htmlFor: string;
+  label: string;
+};
+
+export const SelectInput: React.FC<{
+  label: string;
+  options: Option[];
+  reducer?: (state: SelectState, action: SelectAction) => SelectState;
+  renderLabelField?: (props: LabelProps) => React.ReactNode;
+  filterOptions?: (
+    options: Option[],
+    filterValue: string,
+    selectedOptions: Option[]
+  ) => Option[];
+  onChangeSelectedOptions?: (options: Option[]) => void;
+}> = ({
   label,
   options,
+  reducer = initialReducer,
+  renderLabelField,
+  filterOptions = initialFilterOptions,
+  onChangeSelectedOptions = () => {},
 }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+  const initialState = {
+    inputValue: "",
+    selectedOptions: [],
+  };
+  const [{ inputValue, selectedOptions }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    onChangeSelectedOptions(selectedOptions);
+  }, [selectedOptions]);
 
   const id = useRef(
     `${label.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`
   );
 
-  const filterOptions = (
-    options: Option[],
-    filterValue: string,
-    selectedOptions: Option[]
-  ): Option[] => {
-    return options
-      .filter((option) =>
-        option.label.toLowerCase().includes(filterValue.toLowerCase())
-      )
-      .filter(
-        (option) =>
-          !selectedOptions.some((selectedOption) =>
-            selectedOption.label
-              .toLowerCase()
-              .includes(option.label.toLowerCase())
-          )
-      );
-  };
-  const createOption = (optionValue: string): Option => {
-    return {
-      label: optionValue,
-      id: `${optionValue.replace(" ", "-")}-${Math.floor(
-        Math.random() * 10000
-      )}`,
-    };
-  };
-
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.currentTarget.value);
+    e.persist();
+    dispatch({ type: "change-input", event: e });
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setSelectedOptions([...selectedOptions, createOption(inputValue)]);
-      setInputValue("");
-    }
-    if (e.key === "Backspace" && inputValue.length === 0) {
-      setSelectedOptions(selectedOptions.splice(0, selectedOptions.length - 1));
-    }
+    e.persist();
+    dispatch({ type: "key-down", event: e });
   };
 
   const removeValue = (value: Option) => {
-    setSelectedOptions(
-      selectedOptions.filter((selectedOption) => value.id !== selectedOption.id)
-    );
+    dispatch({ type: "remove-value", value });
     inputRef?.current?.focus();
   };
 
   const selectValue = (value: Option) => {
-    setSelectedOptions([...selectedOptions, value]);
-    setInputValue("");
-
+    dispatch({ type: "select-value", value });
     inputRef?.current?.focus();
   };
   return (
     <DropdownHolder>
       <InputContainer>
         {selectedOptions.map((option) => (
-          <Tag key={option.id}>
+          <Tag key={option.label}>
             {option.label}
             <button
               onClick={() => {
@@ -228,14 +328,19 @@ export const SelectInput: React.FC<{ label: string; options: Option[] }> = ({
           onChange={onChangeInput}
           onKeyDown={onKeyDown}
           placeholder=" "
+          size={inputValue.length || 1}
         />
-        <InputLabel htmlFor={id.current}>{label}</InputLabel>
+        {renderLabelField ? (
+          renderLabelField({ htmlFor: id.current, label })
+        ) : (
+          <InputLabel htmlFor={id.current}>{label}</InputLabel>
+        )}
       </InputContainer>
       <div style={{ marginBottom: "16px", position: "relative" }}>
         <Dropdown>
           {filterOptions(options, inputValue, selectedOptions).map((option) => (
             <DropdownItem
-              key={`dropdown-item-${option.id}`}
+              key={`dropdown-item-${option.label}`}
               onClick={() => {
                 selectValue(option);
               }}

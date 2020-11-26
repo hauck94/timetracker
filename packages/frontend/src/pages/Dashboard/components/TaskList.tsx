@@ -90,6 +90,7 @@ export const TaskItemStyle = styled.div`
     }
   }
 `;
+
 export const TaskList = styled.ul`
   list-style: none;
   box-shadow: 0 0.125em 0.25em 0 ${(props) => props.theme.colors.shadowColor};
@@ -115,23 +116,34 @@ export const TaskDescription = styled.p`
   font-size: 0.8rem;
   margin: 0;
 `;
+
 export const TaskDate = styled.p`
   margin: 0;
   font-size: 0.8rem;
   color: ${(props) => props.theme.colors.secondaryFontColor};
 `;
+
 export const TaskValue = styled.span`
   white-space: nowrap;
 `;
+
 export type TaskItemProps = {
   task: Task;
+  onClick?: (task: Task) => void;
 };
 
 export const TaskItem: React.FC<TaskItemProps> = ({
-  task: { name, description, created, labels, trackings },
+  task,
+  onClick = () => {},
 }) => {
+  const { name, description, created, labels, updatedAt, trackings } = task;
   return (
-    <TaskItemStyle>
+    <TaskItemStyle
+      onClick={() => {
+        console.log("cliocked transaction");
+        onClick(task);
+      }}
+    >
       <TaskHighlight />
       <TaskFlex>
         <div>
@@ -142,14 +154,13 @@ export const TaskItem: React.FC<TaskItemProps> = ({
         <LabelList>
           {labels &&
             labels.map((label: Label) => {
-              return <li key={label.name}>{label.tasks}</li>;
+              return <li key={label.id}>{label.name}</li>;
             })}
         </LabelList>
-
         <TrackingList>
           {trackings &&
             trackings.map((tracking: Tracking) => {
-              return <li key={tracking.name}>{tracking.task}</li>;
+              return <li key={tracking.id}>{tracking.name}</li>;
             })}
         </TrackingList>
       </TaskFlex>
