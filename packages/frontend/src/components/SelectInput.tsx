@@ -86,7 +86,7 @@ const DropdownHolder = styled.div`
   }
 `;
 
-const Tag = styled.div`
+const Label = styled.div`
   border-radius: 5px;
   background-color: ${(props) => props.theme.colors.primary};
   position: relative;
@@ -136,7 +136,7 @@ const Tag = styled.div`
 `;
 
 export interface Option {
-  label: string;
+  name: string;
   id?: string;
 }
 
@@ -165,7 +165,7 @@ export type SelectAction =
 
 const createOption = (optionValue: string): Option => {
   return {
-    label: optionValue,
+    name: optionValue,
   };
 };
 export function initialReducer(
@@ -187,7 +187,7 @@ export function initialReducer(
         action.event.preventDefault();
         if (
           !oldState.selectedOptions.some(
-            (option) => option.label === oldState.inputValue
+            (option) => option.name === oldState.inputValue
           )
         ) {
           return {
@@ -233,14 +233,12 @@ const initialFilterOptions = (
 ): Option[] => {
   return options
     .filter((option) =>
-      option.label.toLowerCase().includes(filterValue.toLowerCase())
+      option.name.toLowerCase().includes(filterValue.toLowerCase())
     )
     .filter(
       (option) =>
         !selectedOptions.some((selectedOption) =>
-          selectedOption.label
-            .toLowerCase()
-            .includes(option.label.toLowerCase())
+          selectedOption.name.toLowerCase().includes(option.name.toLowerCase())
         )
     );
 };
@@ -248,6 +246,10 @@ const initialFilterOptions = (
 export type LabelProps = {
   htmlFor: string;
   label: string;
+};
+const initialComponentState = {
+  inputValue: "",
+  selectedOptions: [],
 };
 
 export const SelectInput: React.FC<{
@@ -261,6 +263,7 @@ export const SelectInput: React.FC<{
     selectedOptions: Option[]
   ) => Option[];
   onChangeSelectedOptions?: (options: Option[]) => void;
+  initialState?: SelectState;
 }> = ({
   label,
   options,
@@ -268,11 +271,8 @@ export const SelectInput: React.FC<{
   renderLabelField,
   filterOptions = initialFilterOptions,
   onChangeSelectedOptions = () => {},
+  initialState = initialComponentState,
 }) => {
-  const initialState = {
-    inputValue: "",
-    selectedOptions: [],
-  };
   const [{ inputValue, selectedOptions }, dispatch] = useReducer(
     reducer,
     initialState
@@ -310,8 +310,8 @@ export const SelectInput: React.FC<{
     <DropdownHolder>
       <InputContainer>
         {selectedOptions.map((option) => (
-          <Tag key={option.label}>
-            {option.label}
+          <Label key={option.name}>
+            {option.name}
             <button
               onClick={() => {
                 removeValue(option);
@@ -319,7 +319,7 @@ export const SelectInput: React.FC<{
             >
               x
             </button>
-          </Tag>
+          </Label>
         ))}
         <InputField
           ref={inputRef}
@@ -340,12 +340,12 @@ export const SelectInput: React.FC<{
         <Dropdown>
           {filterOptions(options, inputValue, selectedOptions).map((option) => (
             <DropdownItem
-              key={`dropdown-item-${option.label}`}
+              key={`dropdown-item-${option.name}`}
               onClick={() => {
                 selectValue(option);
               }}
             >
-              {option.label}
+              {option.name}
             </DropdownItem>
           ))}
         </Dropdown>

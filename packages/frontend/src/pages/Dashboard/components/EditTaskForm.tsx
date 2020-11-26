@@ -1,37 +1,47 @@
 import React, { useContext, useState, ChangeEvent } from "react";
 import { Button } from "../../../components/Button";
 import { Input } from "../../../components/Input";
-import { SelectInput, Option } from "../../../components/SelectInput";
+import { SelectInput } from "../../../components/SelectInput";
 import { labelContext } from "../../../contexts/LabelContext";
+import { Task } from "./TaskList";
+import { Option } from "../../../components/SelectInput";
 
-export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({
-  afterSubmit,
-}) => {
+interface EditTaskFormState {
+  name: string;
+  description: string;
+  labels: Option[];
+}
+
+export const EditTaskForm: React.FC<{
+  afterSubmit: () => void;
+  task: Task;
+}> = ({ afterSubmit, task }) => {
   const {
     labels,
     actions: { refetch: refetchLabels },
   } = useContext(labelContext);
-  const [values, setValues] = useState({
-    name: "",
-    description: "",
-    value: "",
-    labels: [] as Option[],
-  });
+  const [values, setValues] = useState<EditTaskFormState>(task);
   const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(values);
+    console.log("values", values);
 
-    await fetch("/api/task", {
-      method: "POST",
+    await fetch(`/api/task/${task.id}`, {
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...values,
-        value: Math.abs(parseFloat(values.value)).toString(),
       }),
     });
+
+    console.log(
+      JSON.stringify({
+        ...values,
+      })
+    );
+
     await refetchLabels();
     afterSubmit();
   };
@@ -53,15 +63,17 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({
         required
         value={values.description}
       />
+
       <SelectInput
         label="Labels"
         options={labels}
+        initialState={{ inputValue: "", selectedOptions: values.labels }}
         onChangeSelectedOptions={(options) => {
           console.log("options change", options);
           setValues({ ...values, labels: options });
         }}
       />
-      <Button type="submit">Add Task</Button>
+      <Button type="submit">Edit Task</Button>
     </form>
   );
 };

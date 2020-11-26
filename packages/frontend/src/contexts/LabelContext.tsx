@@ -9,7 +9,7 @@ interface LabelContext {
 }
 
 const initialContext = {
-    labels: [] as Option[],
+  labels: [] as Option[],
   actions: {
     refetch: async () => {},
   },
@@ -28,8 +28,6 @@ export const LabelProvider: React.FC = ({ children }) => {
     });
     const labelJson = await labelRequest.json();
     setLabels(labelJson.data as Option[]);
-    console.log(labels);
-    
   };
 
   useEffect(() => {
@@ -41,7 +39,7 @@ export const LabelProvider: React.FC = ({ children }) => {
   return (
     <labelContext.Provider
       value={{
-       labels,
+        labels,
         actions: {
           refetch,
         },

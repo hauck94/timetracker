@@ -6,22 +6,23 @@ import { Label } from "../entity/label";
 export const getTasks = async (_: Request, res: Response) => {
   const taskRepository = await getRepository(Task);
   const tasks = await taskRepository.find();
+  // tslint:disable-next-line: prettier
   res.send({
     data: tasks,
   });
 };
 
 export const createTask = async (req: Request, res: Response) => {
-  let { name, description, label } = req.body;
+  const { name, description, label } = req.body;
 
-  let task = new Task();
+  const task = new Task();
   task.name = name;
   task.description = description;
   task.labels = [];
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
   try {
-    if (label != undefined && label.length > 0) {
+    if (label !== undefined && label.length > 0) {
       const labels = await labelRepository.findByIds(label);
       task.labels.push(...labels);
     }
@@ -65,22 +66,49 @@ export const deleteTask = async (req: Request, res: Response) => {
   }
 };
 
+function checkLabelExist(name: string, labels: Label[]): boolean {
+  if(labels.some((label) => label.name === name)){
+    return true;
+  }
+  return false;
+};
+
 export const patchTask = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
 
-  let { name, description, label } = req.body;
+  const { name, description, labels } = req.body;
 
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
+
   try {
     let task = await taskRepository.findOneOrFail(taskId);
-
+    let labelRepo = await labelRepository.find();
     task.name = name;
     task.description = description;
+    task.labels = [];
+    if (labels != undefined && !labels.empty) {
+      labels.forEach(async (element: Label) => {
+        if (checkLabelExist(element.name, labelRepo)) {
+          labelRepo.forEach((label) => {
+            if (label.name == element.name ) {
+              task.labels.push(label);
+            }
+          });
+        } else {
+          console.log("make new Label");
 
-    if (label != undefined && !label.empty) {
-      const labels = await labelRepository.findByIds(label);
-      task.labels.push(...labels);
+          const newLabel = new Label();
+          newLabel.name = element.name;
+          const label = await labelRepository.save(newLabel);
+          console.log("new Label: ", newLabel);
+          
+          task.labels.push(label);
+          await taskRepository.save(task);
+          console.log("task labels: ", task.labels);
+          
+        }
+      });
     }
 
     task = await taskRepository.save(task);
@@ -99,7 +127,7 @@ export const getLabels = async (req: Request, res: Response) => {
 
   const taskRepository = await getRepository(Task);
   try {
-    let task = await taskRepository.findOneOrFail(taskId);
+    const task = await taskRepository.findOneOrFail(taskId);
 
     res.send({
       data: task.labels,
@@ -115,7 +143,7 @@ export const getTrackings = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
   const taskRepository = await getRepository(Task);
   try {
-    let task = await taskRepository.findOneOrFail(taskId);
+    const task = await taskRepository.findOneOrFail(taskId);
     res.send({
       data: task.trackings,
     });
@@ -128,21 +156,21 @@ export const getTrackings = async (req: Request, res: Response) => {
 
 export const deleteLabel = async (req: Request, res: Response) => {
   const taskId = req.params.taskId;
-  let { label } = req.body;
+  const { label } = req.body;
   const taskRepository = await getRepository(Task);
   const labelRepository = await getRepository(Label);
   let atleastOneLabel = false;
   try {
-    let task = await taskRepository.findOneOrFail(taskId);
+    const task = await taskRepository.findOneOrFail(taskId);
 
     if (label != undefined && !label.empty && task.labels.length > 0) {
       const labels = await labelRepository.findByIds(label);
       // filtering labels
-      //task.labels= task.labels.filter((obj) => !labels.includes(obj));
+      // task.labels= task.labels.filter((obj) => !labels.includes(obj));
       labels.forEach((element) => {
-        task.labels.forEach((label) => {
-          if (label.id == element.id) {
-            const index = task.labels.indexOf(label);
+        task.labels.forEach((labelFromDB) => {
+          if (labelFromDB.id === element.id) {
+            const index = task.labels.indexOf(labelFromDB);
             if (index > -1) {
               task.labels.splice(index, 1);
               atleastOneLabel = true;

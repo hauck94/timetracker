@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 export type Task = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   created: string;
@@ -12,7 +12,7 @@ export type Task = {
 };
 
 export type Label = {
-  id: number;
+  id: string;
   name: string;
   created: string;
   updatedAt: string;
@@ -20,7 +20,7 @@ export type Label = {
 };
 
 export type Tracking = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   startTime: string;
@@ -39,7 +39,7 @@ const LabelList = styled.ul`
   display: flex;
   & > li {
     margin-right: 0.5rem;
-    padding: 0.125rem;
+    padding: 0.5rem;
     border-radius: 0.25rem;
     background-color: ${(props) => props.theme.colors.primary};
     display: block;
@@ -56,7 +56,7 @@ const TrackingList = styled.ul`
   display: flex;
   & > li {
     margin-right: 0.5rem;
-    padding: 0.125rem;
+    padding: 0.5rem;
     border-radius: 0.25rem;
     background-color: ${(props) => props.theme.colors.primary};
     display: block;
@@ -140,7 +140,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
   return (
     <TaskItemStyle
       onClick={() => {
-        console.log("cliocked transaction");
+        console.log("clicked transaction ID = ", task.id);
         onClick(task);
       }}
     >
