@@ -8,14 +8,14 @@ import {
 } from "./components/AddButton";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { EditTaskForm } from "./components/EditTaskForm";
-import { FilterPanel } from "./components/FilterPanel";
 import { Task, TaskItem, TaskList } from "./components/TaskList";
+import { Timer } from "./components/Timer";
 
 export default () => {
   const [addTaskVisible, setAddTaskVisible] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
-
+  const [addTimer, setAddTimer] = useState(false);
   const fetchTasks = async function () {
     const taskRequest = await fetch("/api/task", {
       headers: { "content-type": "application/json" },
@@ -107,9 +107,14 @@ export default () => {
             }}
             task={task}
           >
-            <StartTrackingButton onClick={() => {createTracking(task);
-            
-            }} />
+            {addTimer && <Timer></Timer>}
+
+            <StartTrackingButton
+              onClick={() => {
+                createTracking(task);
+                setAddTimer(true);
+              }}
+            />
             <StopTrackingButton />
           </TaskItem>
         ))}
