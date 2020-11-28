@@ -9,5 +9,6 @@ export const theme: DefaultTheme = {
     shadowColor: "rgba(0, 0, 0, 0.3)",
     listBackgroundColor: "rgb(45, 45, 45)",
     danger: '#d01c1f',
+    info: '#9335e6',
   },
 };

@@ -13,6 +13,7 @@ declare module "styled-components" {
       listBackgroundColor: string;
       primary: string;
       danger: string;
+      info: string;
     };
   }
 }

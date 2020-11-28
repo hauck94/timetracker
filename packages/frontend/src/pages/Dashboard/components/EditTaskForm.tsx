@@ -1,5 +1,5 @@
 import React, { useContext, useState, ChangeEvent } from "react";
-import { Button } from "../../../components/Button";
+import { Button, DangerButton } from "../../../components/Button";
 import { Input } from "../../../components/Input";
 import { SelectInput } from "../../../components/SelectInput";
 import { labelContext } from "../../../contexts/LabelContext";
@@ -45,6 +45,16 @@ export const EditTaskForm: React.FC<{
     await refetchLabels();
     afterSubmit();
   };
+
+  const deleteTransaction = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    await fetch(`/api/task/${task.id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    afterSubmit();
+  };
+
   return (
     <form onSubmit={onSubmitForm}>
       <Input
@@ -74,6 +84,9 @@ export const EditTaskForm: React.FC<{
         }}
       />
       <Button type="submit">Edit Task</Button>
+      <DangerButton onClick={deleteTransaction}>
+        Delete Transaction
+      </DangerButton>
     </form>
   );
 };

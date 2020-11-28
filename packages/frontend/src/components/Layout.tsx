@@ -56,7 +56,7 @@ export const Layout: React.FC = ({ children }) => {
           ystem
         </div>
         <NavigationList>
-          <NavigationItem>Home</NavigationItem>
+          <NavigationItem>Task-Detailseite</NavigationItem>
         </NavigationList>
       </Header>
       <Main>{children}</Main>

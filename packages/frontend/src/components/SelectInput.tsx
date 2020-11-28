@@ -130,7 +130,7 @@ const Label = styled.div`
     cursor: pointer;
     &:focus,
     &:hover {
-      background-color: #d01c1f;
+      background-color: ${(props) => props.theme.colors.danger};
     }
   }
 `;

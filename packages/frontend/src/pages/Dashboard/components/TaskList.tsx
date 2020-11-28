@@ -1,5 +1,6 @@
-import React from "react";
+import React, { Children } from "react";
 import styled from "styled-components";
+import { StartTrackingButton, StopTrackingButton } from "./AddButton";
 
 export type Task = {
   id: string;
@@ -91,6 +92,18 @@ export const TaskItemStyle = styled.div`
   }
 `;
 
+export const TaskItemWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+`;
+
+export const TrackingControlls = styled.ul`
+  display: flex;
+  flex-direction: row;
+  margin:auto; 
+  margin-right:1em;
+`;
+
 export const TaskList = styled.ul`
   list-style: none;
   box-shadow: 0 0.125em 0.25em 0 ${(props) => props.theme.colors.shadowColor};
@@ -132,38 +145,48 @@ export type TaskItemProps = {
   onClick?: (task: Task) => void;
 };
 
+function output(): void {
+  console.log("hi");
+}
+
 export const TaskItem: React.FC<TaskItemProps> = ({
+  children,
   task,
   onClick = () => {},
 }) => {
   const { name, description, created, labels, updatedAt, trackings } = task;
   return (
-    <TaskItemStyle
-      onClick={() => {
-        console.log("clicked transaction ID = ", task.id);
-        onClick(task);
-      }}
-    >
-      <TaskHighlight />
-      <TaskFlex>
-        <div>
-          <TaskTitle>{name}</TaskTitle>
-          <TaskDescription>{description}</TaskDescription>
-          <TaskDate>{created && created.toLocaleString()}</TaskDate>
-        </div>
-        <LabelList>
-          {labels &&
-            labels.map((label: Label) => {
-              return <li key={label.id}>{label.name}</li>;
-            })}
-        </LabelList>
-        <TrackingList>
-          {trackings &&
-            trackings.map((tracking: Tracking) => {
-              return <li key={tracking.id}>{tracking.name}</li>;
-            })}
-        </TrackingList>
-      </TaskFlex>
-    </TaskItemStyle>
+    <TaskItemWrapper>
+      <TaskItemStyle
+        onClick={() => {
+          console.log("clicked transaction ID = ", task.id);
+          onClick(task);
+        }}
+      >
+        <TaskHighlight />
+        <TaskFlex>
+          <div>
+            <TaskTitle>{name}</TaskTitle>
+            <TaskDescription>{description}</TaskDescription>
+            <TaskDate>{created && created.toLocaleString()}</TaskDate>
+          </div>
+          <LabelList>
+            {labels &&
+              labels.map((label: Label) => {
+                return <li key={label.id}>{label.name}</li>;
+              })}
+          </LabelList>
+          <TrackingList>
+            {trackings &&
+              trackings.map((tracking: Tracking) => {
+                return <li key={tracking.id}>{tracking.name}</li>;
+              })}
+          </TrackingList>
+        </TaskFlex>
+      </TaskItemStyle>
+      <TrackingControlls>
+      {children}
+      </TrackingControlls>
+    </TaskItemWrapper>
   );
 };

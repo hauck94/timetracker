@@ -31,18 +31,14 @@ export const createTask = async (req: Request, res: Response) => {
             }
           });
         } else {
-          console.log("make new Label");
-
           const newLabel = new Label();
           newLabel.name = element.name;
           const label = await labelRepository.save(newLabel);
-          console.log("new Label: ", newLabel);
 
           task.labels.push(label);
-          await taskRepository.save(task);
-          console.log("task labels: ", task.labels);
         }
       });
+      await taskRepository.save(task);
     }
     const createdTask = await taskRepository.save(task);
     res.send({
@@ -114,16 +110,12 @@ export const patchTask = async (req: Request, res: Response) => {
             }
           });
         } else {
-          console.log("make new Label");
-
           const newLabel = new Label();
           newLabel.name = element.name;
           const label = await labelRepository.save(newLabel);
-          console.log("new Label: ", newLabel);
 
           task.labels.push(label);
           await taskRepository.save(task);
-          console.log("task labels: ", task.labels);
         }
       });
     }

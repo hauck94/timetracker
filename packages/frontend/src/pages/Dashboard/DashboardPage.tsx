@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Layout } from "../../components/Layout";
 import { Modal } from "../../components/Modal";
-import { AddButton } from "./components/AddButton";
+import { AddButton, StartTrackingButton, StopTrackingButton } from "./components/AddButton";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { EditTaskForm } from "./components/EditTaskForm";
+import { FilterPanel } from "./components/FilterPanel";
 import { Task, TaskItem, TaskList } from "./components/TaskList";
-
 
 export default () => {
   const [addTaskVisible, setAddTaskVisible] = useState(false);
@@ -37,22 +37,7 @@ export default () => {
         `}
       >
         <div>
-          <h2>Home</h2>
-          <p
-            css={`
-              font-size: 36px;
-              margin: 0;
-            `}
-          ></p>
-        </div>
-        <div
-          css={`
-            flex: 1;
-            justify-content: flex-end;
-            display: flex;
-            align-items: top;
-          `}
-        >
+          <h2>Dashboard</h2>
           <AddButton
             onClick={() => {
               if (!editTask) {
@@ -104,7 +89,10 @@ export default () => {
               }
             }}
             task={task}
-          ></TaskItem>
+          >
+            <StartTrackingButton/>
+            <StopTrackingButton/>
+          </TaskItem>
         ))}
       </TaskList>
     </Layout>
