@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Layout } from "../../components/Layout";
 import { Modal } from "../../components/Modal";
-import { AddButton, StartTrackingButton, StopTrackingButton } from "./components/AddButton";
+import {
+  AddButton,
+  StartTrackingButton,
+  StopTrackingButton,
+} from "./components/AddButton";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { EditTaskForm } from "./components/EditTaskForm";
 import { FilterPanel } from "./components/FilterPanel";
@@ -21,6 +25,19 @@ export default () => {
       const taskJSON = await taskRequest.json();
       setTasks(taskJSON.data);
     }
+  };
+
+  const createTracking = async (task: Task) => {
+    const trackingRequest = await fetch(`/api/tracking/${task.id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: task.name,
+        description: "test 2",
+      }),
+    });
+    console.log(trackingRequest);
+    fetchTasks();
   };
 
   useEffect(() => {
@@ -90,8 +107,10 @@ export default () => {
             }}
             task={task}
           >
-            <StartTrackingButton/>
-            <StopTrackingButton/>
+            <StartTrackingButton onClick={() => {createTracking(task);
+            
+            }} />
+            <StopTrackingButton />
           </TaskItem>
         ))}
       </TaskList>

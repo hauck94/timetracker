@@ -59,7 +59,7 @@ const TrackingList = styled.ul`
     margin-right: 0.5rem;
     padding: 0.5rem;
     border-radius: 0.25rem;
-    background-color: ${(props) => props.theme.colors.primary};
+    background-color: ${(props) => props.theme.colors.info};
     display: block;
     color: #333;
   }
