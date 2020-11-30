@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { Layout } from "../../components/Layout";
-import { Modal } from "../../components/Modal";
-import { AddButton } from "../Dashboard/components/AddButton";
-import { Task, Tracking } from "../Dashboard/components/TaskList";
-import { AddTrackingForm } from "./components/AddTrackingForm";
-import { EditTrackingForm } from "./components/EditTrackingForm";
-import { TrackingList, TrackingItem } from "./components/TrackingList";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { Layout } from '../../components/Layout';
+import { Modal } from '../../components/Modal';
+import { AddButton } from '../Dashboard/components/AddButton';
+import { Task, Tracking } from '../Dashboard/components/TaskList';
+import { AddTrackingForm } from './components/AddTrackingForm';
+import { EditTrackingForm } from './components/EditTrackingForm';
+import { TrackingList, TrackingItem } from './components/TrackingList';
 
 export interface ITaskRouteParams {
   id: string;
@@ -16,11 +16,11 @@ export default () => {
   const [task, setTask] = useState<Task>();
   const [editTracking, setEditTracking] = useState<Tracking | null>(null);
   const [addTrackingVisible, setAddTrackingVisible] = useState(false);
-  let { id } = useParams<ITaskRouteParams>();
+  const { id } = useParams<ITaskRouteParams>();
 
-  const fetchSingelTask = async function () {
-    const taskRequest = await fetch("/api/task/" + id, {
-      headers: { "content-type": "application/json" },
+  const fetchSingelTask = async () => {
+    const taskRequest = await fetch(`/api/task/ + ${id}`, {
+      headers: { 'content-type': 'application/json' },
     });
     if (taskRequest.status === 200) {
       const taskJSON = await taskRequest.json();
@@ -93,7 +93,7 @@ export default () => {
               setEditTracking(tracking);
             }}
             tracking={tracking}
-          ></TrackingItem>
+          />
         ))}
       </TrackingList>
     </Layout>

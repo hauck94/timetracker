@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { Layout } from "../../components/Layout";
-import { Modal } from "../../components/Modal";
-import {
-  AddButton,
-  EditTrackingButton,
-  StartTrackingButton,
-  StopTrackingButton,
-} from "./components/AddButton";
-import { AddTaskForm } from "./components/AddTaskForm";
-import { EditTaskForm } from "./components/EditTaskForm";
-import { Task, TaskItem, TaskList } from "./components/TaskList";
-import { Timer } from "./components/Timer";
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Layout } from '../../components/Layout';
+import { Modal } from '../../components/Modal';
+import { AddButton, EditTrackingButton, StartTrackingButton, StopTrackingButton } from './components/AddButton';
+import { AddTaskForm } from './components/AddTaskForm';
+import { EditTaskForm } from './components/EditTaskForm';
+import { Task, TaskItem, TaskList } from './components/TaskList';
+import { Timer } from './components/Timer';
 
 export default () => {
   const [addTaskVisible, setAddTaskVisible] = useState(false);
@@ -20,9 +15,9 @@ export default () => {
   const [addTimer, setAddTimer] = useState(false);
   const history = useHistory();
 
-  const fetchTasks = async function () {
-    const taskRequest = await fetch("/api/task", {
-      headers: { "content-type": "application/json" },
+  const fetchTasks = async () => {
+    const taskRequest = await fetch('/api/task', {
+      headers: { 'content-type': 'application/json' },
     });
     console.log(taskRequest);
     if (taskRequest.status === 200) {
@@ -33,19 +28,19 @@ export default () => {
 
   const createTracking = async (task: Task) => {
     const trackingRequest = await fetch(`/api/tracking/${task.id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        description: 'test 2',
         name: task.name,
-        description: "test 2",
       }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
     });
     console.log(trackingRequest);
     fetchTasks();
   };
 
   const routeChange = (id: string) => {
-    let path = "/task/" + id;
+    const path = `/task/" + ${id}`;
     history.push(path);
   };
 
@@ -116,7 +111,7 @@ export default () => {
             }}
             task={task}
           >
-            {addTimer && <Timer></Timer>}
+            {addTimer && <Timer />}
 
             <StartTrackingButton
               onClick={() => {

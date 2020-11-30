@@ -1,10 +1,9 @@
-import React, { useContext, useState, ChangeEvent } from "react";
-import { Button, DangerButton } from "../../../components/Button";
-import { Input } from "../../../components/Input";
-import { SelectInput } from "../../../components/SelectInput";
-import { labelContext } from "../../../contexts/LabelContext";
-import { Task } from "./TaskList";
-import { Option } from "../../../components/SelectInput";
+import React, { useContext, useState, ChangeEvent } from 'react';
+import { Button, DangerButton } from '../../../components/Button';
+import { Input } from '../../../components/Input';
+import { SelectInput, Option } from '../../../components/SelectInput';
+import { labelContext } from '../../../contexts/LabelContext';
+import { Task } from './TaskList';
 
 interface EditTaskFormState {
   name: string;
@@ -26,20 +25,20 @@ export const EditTaskForm: React.FC<{
   };
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("values", values);
+    console.log('values', values);
 
     await fetch(`/api/task/${task.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...values,
       }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'PATCH',
     });
 
     console.log(
       JSON.stringify({
         ...values,
-      })
+      }),
     );
 
     await refetchLabels();
@@ -49,37 +48,30 @@ export const EditTaskForm: React.FC<{
   const deleteTask = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await fetch(`/api/task/${task.id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
+      method: 'DELETE',
     });
     afterSubmit();
   };
 
   return (
     <form onSubmit={onSubmitForm}>
-      <Input
-        name="name"
-        type="text"
-        label="Name"
-        onChange={fieldDidChange}
-        required
-        value={values.name}
-      />
+      <Input name="name" type="text" label="Name" onChange={fieldDidChange} required={true} value={values.name} />
       <Input
         name="description"
         label="Description"
         type="text"
         onChange={fieldDidChange}
-        required
+        required={true}
         value={values.description}
       />
 
       <SelectInput
         label="Labels"
         options={labels}
-        initialState={{ inputValue: "", selectedOptions: values.labels }}
+        initialState={{ inputValue: '', selectedOptions: values.labels }}
         onChangeSelectedOptions={(options) => {
-          console.log("options change", options);
+          console.log('options change', options);
           setValues({ ...values, labels: options });
         }}
       />

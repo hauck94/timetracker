@@ -203,6 +203,7 @@ describe('task', () => {
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
+        // tslint:disable-next-line: no-unused-expression
         expect(res.body.data).toBeUndefined;
         done();
       });

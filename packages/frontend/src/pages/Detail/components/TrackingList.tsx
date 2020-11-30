@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { Tracking } from "../../Dashboard/components/TaskList";
+import React from 'react';
+import styled from 'styled-components';
+import { Tracking } from '../../Dashboard/components/TaskList';
 
 const TrackingFlex = styled.div`
   display: flex;
@@ -86,18 +86,8 @@ export type TrackingItemProps = {
   onClick?: (tracking: Tracking) => void;
 };
 
-export const TrackingItem: React.FC<TrackingItemProps> = ({
-  tracking,
-  onClick = () => {},
-}) => {
-  const {
-    created,
-    description,
-    endTime,
-    name,
-    startTime,
-    updatedAt,
-  } = tracking;
+export const TrackingItem: React.FC<TrackingItemProps> = ({ tracking, onClick = () => undefined }) => {
+  const { created, description, endTime, name, startTime, updatedAt } = tracking;
   return (
     <TrackingItemWrapper>
       <TrackingItemStyle
@@ -109,9 +99,7 @@ export const TrackingItem: React.FC<TrackingItemProps> = ({
         <TrackingFlex>
           <TrackingPropertyWrapper>
             <TrackingTitle>{name}</TrackingTitle>
-            <TrackingDescription>
-              description: {description}
-            </TrackingDescription>
+            <TrackingDescription>description: {description}</TrackingDescription>
           </TrackingPropertyWrapper>
           <TrackingPropertyWrapper>
             <TrackingDescription>created: {created}</TrackingDescription>

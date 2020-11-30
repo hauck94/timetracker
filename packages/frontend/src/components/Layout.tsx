@@ -1,10 +1,9 @@
-import React from "react";
-import { Redirect } from "react-router";
-import { Link } from "react-router-dom";
-import styled, { css } from "styled-components/macro";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 
-const headerHeight = "85px";
-const footerHeight = "50px";
+const headerHeight = '85px';
+const footerHeight = '50px';
 
 export const MaxWidthCSS = css`
   max-width: 860px;
@@ -33,15 +32,12 @@ const Footer = styled.footer`
 const NavigationList = styled.ul`
   list-style: none;
 `;
-const NavigationItem = styled.li`
-  color: ${(props) => props.theme.colors.primary};
-`;
 
 export const Layout: React.FC = ({ children }) => {
   return (
     <>
       <Header>
-        <Link to={"/"} style={{ textDecoration: "none", color: "white" }}>
+        <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>
           <div
             css={`
               font-size: 25px;
@@ -59,7 +55,7 @@ export const Layout: React.FC = ({ children }) => {
             ystem
           </div>
         </Link>
-        <NavigationList></NavigationList>
+        <NavigationList />
       </Header>
       <Main>{children}</Main>
       <Footer>© 2020 Task System</Footer>

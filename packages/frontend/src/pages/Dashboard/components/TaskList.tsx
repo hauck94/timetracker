@@ -1,7 +1,5 @@
-import React, { Children } from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { StartTrackingButton, StopTrackingButton } from "./AddButton";
+import React from 'react';
+import styled from 'styled-components';
 
 export type Task = {
   id: string;
@@ -146,16 +144,8 @@ export type TaskItemProps = {
   onClick?: (task: Task) => void;
 };
 
-function output(): void {
-  console.log("hi");
-}
-
-export const TaskItem: React.FC<TaskItemProps> = ({
-  children,
-  task,
-  onClick = () => {},
-}) => {
-  const { name, description, labels, id, trackings } = task;
+export const TaskItem: React.FC<TaskItemProps> = ({ children, task, onClick = () => undefined }) => {
+  const { name, description, labels, trackings } = task;
   return (
     <TaskItemWrapper>
       <TaskItemStyle

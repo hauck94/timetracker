@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Option } from "../components/SelectInput";
+import React, { useState, useEffect } from 'react';
+import { Option } from '../components/SelectInput';
 
 interface LabelContext {
   labels: Option[];
@@ -9,10 +9,10 @@ interface LabelContext {
 }
 
 const initialContext = {
-  labels: [] as Option[],
   actions: {
-    refetch: async () => {},
+    refetch: async () => undefined,
   },
+  labels: [] as Option[],
 };
 
 export const labelContext = React.createContext<LabelContext>(initialContext);
@@ -21,9 +21,9 @@ export const LabelProvider: React.FC = ({ children }) => {
   const [labels, setLabels] = useState<Option[]>([]);
 
   const refetch = async () => {
-    const labelRequest = await fetch("/api/label", {
+    const labelRequest = await fetch('/api/label', {
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
     });
     const labelJson = await labelRequest.json();
@@ -31,7 +31,7 @@ export const LabelProvider: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
-    (async function () {
+    (async () => {
       await refetch();
     })();
   }, []);
@@ -39,10 +39,10 @@ export const LabelProvider: React.FC = ({ children }) => {
   return (
     <labelContext.Provider
       value={{
-        labels,
         actions: {
           refetch,
         },
+        labels,
       }}
     >
       {children}

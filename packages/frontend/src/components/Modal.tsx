@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import styled from "styled-components";
+import ReactDOM from 'react-dom';
+import styled from 'styled-components';
 
 const ModalHolder = styled.div`
   position: fixed;
@@ -53,8 +52,8 @@ interface ModalProps {
   onCancel: () => void;
 }
 
-const modalRoot = document.createElement("div");
-modalRoot.setAttribute("id", "modal-root");
+const modalRoot = document.createElement('div');
+modalRoot.setAttribute('id', 'modal-root');
 document.body.appendChild(modalRoot);
 
 export const Modal = ({ children, title, onCancel }: ModalProps) => {
@@ -70,6 +69,6 @@ export const Modal = ({ children, title, onCancel }: ModalProps) => {
         </ModalMask>
       </ModalMaskHolder>
     </ModalHolder>,
-    modalRoot
+    modalRoot,
   );
 };

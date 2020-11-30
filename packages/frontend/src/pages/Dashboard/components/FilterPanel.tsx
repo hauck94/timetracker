@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { FilterButton } from "../../../components/Button";
-import { Task } from "./TaskList";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Task } from './TaskList';
 
 const StyledPanel = styled.div`
   display: flex;
@@ -10,8 +9,7 @@ const StyledPanel = styled.div`
   margin-bottom: 2rem;
   align-items: center;
   border-radius: 10px;
-  background-color: ${(styledProps) =>
-    styledProps.theme.colors.listBackgroundColor};
+  background-color: ${(styledProps) => styledProps.theme.colors.listBackgroundColor};
 `;
 /*
 const filterLabel () => {
@@ -29,7 +27,7 @@ const filterDescription () => {
 export const FilterPanel: React.FC<{
   task: Task[];
 }> = ({ task }) => {
-  const [values, setValues] = useState(task);
+  const [] = useState(task);
   return (
     <StyledPanel>
       <h3>Filter</h3>
