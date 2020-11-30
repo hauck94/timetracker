@@ -11,7 +11,8 @@
     "build": "tsc -b .",
     "lint": "tslint --project .",
     "typeorm": "node ./node_modules/typeorm/cli.js",
-    "fixtures": "npx fixtures ./src/fixtures/ --config ormconfig.js"
+    "fixtures": "npx fixtures ./src/fixtures/ --config ormconfig.js",
+    "pretty": "prettier --write \"./**/*.{ts,tsx,json}\""
   },
   "author": "Marcel Hauck",
   "license": "MIT",

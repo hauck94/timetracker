@@ -1,7 +1,7 @@
-import { getRepository } from "typeorm";
-import { Task } from "../entity/task";
-import { Request, Response } from "express";
-import { Label } from "../entity/label";
+import { getRepository } from 'typeorm';
+import { Task } from '../entity/task';
+import { Request, Response } from 'express';
+import { Label } from '../entity/label';
 
 export const getTasks = async (_: Request, res: Response) => {
   const taskRepository = await getRepository(Task);
@@ -46,7 +46,7 @@ export const createTask = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -75,7 +75,7 @@ export const deleteTask = async (req: Request, res: Response) => {
     res.send({});
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -126,7 +126,7 @@ export const patchTask = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -143,7 +143,7 @@ export const getLabels = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -158,7 +158,7 @@ export const getTrackings = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -198,7 +198,7 @@ export const deleteLabel = async (req: Request, res: Response) => {
     res.send({});
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };

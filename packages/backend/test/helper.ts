@@ -18,7 +18,7 @@ export class Helper {
     const config = await getConnectionOptions('default');
     this.dbConnection = await createConnection(
       // tslint:disable-next-line: prefer-object-spread
-      Object.assign({}, config, { database: process.env.DBDATABASE })
+      Object.assign({}, config, { database: process.env.DBDATABASE }),
     );
     await this.resetDatabase();
     await this.loadFixtures();
@@ -51,5 +51,4 @@ export class Helper {
   public getRepo<Entity>(target: ObjectType<Entity>) {
     return this.dbConnection.getRepository(target);
   }
-
 }

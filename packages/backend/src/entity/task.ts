@@ -7,19 +7,19 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
-} from "typeorm";
-import { Label } from "./label";
-import { Tracking } from "./tracking";
+} from 'typeorm';
+import { Label } from './label';
+import { Tracking } from './tracking';
 
 @Entity()
 export class Task {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
   name: string;
 
-  @Column({ type: "text", nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @CreateDateColumn()
@@ -29,14 +29,14 @@ export class Task {
   updatedAt: string;
 
   @OneToMany(() => Tracking, (tracking) => tracking.task, {
-    nullable: true,
     eager: true,
+    nullable: true,
   })
   trackings: Tracking[];
 
   @ManyToMany(() => Label, (label) => label.tasks, {
-    nullable: true,
     eager: true,
+    nullable: true,
   })
   @JoinTable()
   labels: Label[];

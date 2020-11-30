@@ -1,7 +1,7 @@
-import { getRepository } from "typeorm";
-import { Label } from "../entity/label";
-import { Request, Response } from "express";
-import { Task } from "../entity/task";
+import { getRepository } from 'typeorm';
+import { Label } from '../entity/label';
+import { Request, Response } from 'express';
+import { Task } from '../entity/task';
 
 export const getLabels = async (_: Request, res: Response) => {
   const labelRepository = await getRepository(Label);
@@ -12,9 +12,9 @@ export const getLabels = async (_: Request, res: Response) => {
 };
 
 export const createLabel = async (req: Request, res: Response) => {
-  let { name } = req.body;
+  const { name } = req.body;
 
-  let label = new Label();
+  const label = new Label();
   label.name = name;
 
   const labelRepository = await getRepository(Label);
@@ -35,7 +35,7 @@ export const getLabel = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -49,7 +49,7 @@ export const deleteLabel = async (req: Request, res: Response) => {
     res.send({});
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -57,7 +57,7 @@ export const deleteLabel = async (req: Request, res: Response) => {
 export const patchLabel = async (req: Request, res: Response) => {
   const labelId = req.params.labelId;
 
-  let { name } = req.body;
+  const { name } = req.body;
 
   const labelRepository = await getRepository(Label);
   try {
@@ -70,7 +70,7 @@ export const patchLabel = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
@@ -79,22 +79,21 @@ export const getTasks = async (req: Request, res: Response) => {
   const labelId = req.params.labelId;
   let doesLabelExist = false;
   try {
-  const labelsWithTasks = await getRepository(Task)
-    .createQueryBuilder("task")
-    .leftJoinAndSelect("task.labels", "label")
-    .getMany();
+    const labelsWithTasks = await getRepository(Task)
+      .createQueryBuilder('task')
+      .leftJoinAndSelect('task.labels', 'label')
+      .getMany();
 
-  
-    let tasks: Task[] = [];
+    const tasks: Task[] = [];
     labelsWithTasks.forEach((element) => {
       element.labels.forEach((label) => {
-        if (String(label.id) == labelId) {
+        if (String(label.id) === labelId) {
           tasks.push(element);
           doesLabelExist = true;
         }
       });
     });
-    if(!doesLabelExist){
+    if (!doesLabelExist) {
       throw Error();
     }
     res.send({
@@ -102,7 +101,7 @@ export const getTasks = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(404).send({
-      status: "not_found",
+      status: 'not_found',
     });
   }
 };
