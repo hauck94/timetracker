@@ -40,7 +40,7 @@ export default () => {
   };
 
   const routeChange = (id: string) => {
-    const path = `/task/" + ${id}`;
+    const path = `/task/${id}`;
     history.push(path);
   };
 

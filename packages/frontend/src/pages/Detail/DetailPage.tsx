@@ -19,7 +19,7 @@ export default () => {
   const { id } = useParams<ITaskRouteParams>();
 
   const fetchSingelTask = async () => {
-    const taskRequest = await fetch(`/api/task/ + ${id}`, {
+    const taskRequest = await fetch(`/api/task/${id}`, {
       headers: { 'content-type': 'application/json' },
     });
     if (taskRequest.status === 200) {
