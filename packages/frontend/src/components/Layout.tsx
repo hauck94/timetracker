@@ -1,4 +1,6 @@
 import React from "react";
+import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 import styled, { css } from "styled-components/macro";
 
 const headerHeight = "85px";
@@ -39,25 +41,25 @@ export const Layout: React.FC = ({ children }) => {
   return (
     <>
       <Header>
-        <div
-          css={`
-            font-size: 25px;
-            letter-spacing: 2.3px;
-            flex: 1;
-          `}
-        >
-          <span
+        <Link to={"/"} style={{ textDecoration: "none", color: "white" }}>
+          <div
             css={`
-              text-decoration: underline overline;
+              font-size: 25px;
+              letter-spacing: 2.3px;
+              flex: 1;
             `}
           >
-            Task S
-          </span>
-          ystem
-        </div>
-        <NavigationList>
-          <NavigationItem>Task-Detailseite</NavigationItem>
-        </NavigationList>
+            <span
+              css={`
+                text-decoration: underline overline;
+              `}
+            >
+              Task S
+            </span>
+            ystem
+          </div>
+        </Link>
+        <NavigationList></NavigationList>
       </Header>
       <Main>{children}</Main>
       <Footer>© 2020 Task System</Footer>

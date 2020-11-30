@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-export const Timer = () => {
+export const Timer: React.FC<{}> = () => {
   const [startTimer, setStartTimer] = useState(Date());
   const [actualTimer, setActualTimer] = useState(Date());
-
-  console.log("before effect");
+  const [timer, setTimer] = useState<number>(0);
+  setTimeout(() => {
+    setTimer(timer + 1);
+  }, 1000);
   useEffect(() => {
-    setStartTimer(Date());
-    console.log("in effect");
-    
-  });
+    setTimeout(() => setTimer(timer + 1), 1000);
+  }, [setTimer]);
 
-return <div>{startTimer}</div>;
+  return <div>{timer}</div>;
 };

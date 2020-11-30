@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import styled from 'styled-components';
+import React, { useRef } from "react";
+import styled from "styled-components";
 
 const InputLabel = styled.label`
   position: absolute;
@@ -44,18 +44,21 @@ const InputContainer = styled.div`
 
   &:focus-within {
     border: 1px solid ${(props) => props.theme.colors.primary};
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 0 0 2px ${(props) => props.theme.colors.primary};
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1),
+      inset 0 0 0 2px ${(props) => props.theme.colors.primary};
   }
 `;
 
 export const Input = ({
   label,
   ...props
-}: React.ComponentPropsWithoutRef<'input'> & {
+}: React.ComponentPropsWithoutRef<"input"> & {
   label: string;
-  type?: 'text' | 'name' | 'id' | 'email' | 'task' | 'label' | 'tracking';
+  type?: "text" | "name" | "id" | "email" | "task" | "label" | "tracking";
 }) => {
-  const id = useRef(`${label.replace(' ', '-')}-${Math.floor(Math.random() * 10000)}`);
+  const id = useRef(
+    `${label.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`
+  );
 
   return (
     <InputContainer>

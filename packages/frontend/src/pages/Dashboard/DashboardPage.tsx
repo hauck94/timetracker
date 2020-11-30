@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { Layout } from "../../components/Layout";
 import { Modal } from "../../components/Modal";
 import {
   AddButton,
+  EditTrackingButton,
   StartTrackingButton,
   StopTrackingButton,
 } from "./components/AddButton";
@@ -16,6 +18,8 @@ export default () => {
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [addTimer, setAddTimer] = useState(false);
+  const history = useHistory();
+
   const fetchTasks = async function () {
     const taskRequest = await fetch("/api/task", {
       headers: { "content-type": "application/json" },
@@ -38,6 +42,11 @@ export default () => {
     });
     console.log(trackingRequest);
     fetchTasks();
+  };
+
+  const routeChange = (id: string) => {
+    let path = "/task/" + id;
+    history.push(path);
   };
 
   useEffect(() => {
@@ -116,6 +125,7 @@ export default () => {
               }}
             />
             <StopTrackingButton />
+            <EditTrackingButton onClick={() => routeChange(task.id)} />
           </TaskItem>
         ))}
       </TaskList>

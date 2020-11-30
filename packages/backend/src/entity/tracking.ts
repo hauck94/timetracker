@@ -19,14 +19,10 @@ export class Tracking {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @Column({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    nullable: true,
-  })
+  @Column({ nullable: true })
   startTime: string;
 
-  @Column({ type: "timestamp", precision: 6, nullable: true })
+  @Column({ nullable: true })
   endTime: string;
 
   @CreateDateColumn()

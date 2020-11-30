@@ -65,16 +65,26 @@ export const deleteTracking = async (req: Request, res: Response) => {
 
 export const patchTracking = async (req: Request, res: Response) => {
   const trackingId = req.params.trackingId;
-  let { name, description } = req.body;
+  let { name, description, created, endTime, startTime, updatedAt} = req.body;
   const trackingRepository = await getRepository(Tracking);
+  
   try {
     let tracking = await trackingRepository.findOneOrFail(trackingId);
     tracking.name = name;
     tracking.description = description;
+    tracking.created = created;
+    tracking.endTime = endTime;
+    tracking.startTime = startTime;
+    tracking.updatedAt = updatedAt;
 
-    tracking = await trackingRepository.save(tracking);
+    console.log(await trackingRepository.save(tracking));
+    
+
+    const createdTracking = await trackingRepository.save(tracking);
+    console.log(createdTracking);
+    
     res.send({
-      data: tracking,
+      data: createdTracking,
     });
   } catch (error) {
     res.status(404).send({

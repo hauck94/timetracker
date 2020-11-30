@@ -46,7 +46,7 @@ export const EditTaskForm: React.FC<{
     afterSubmit();
   };
 
-  const deleteTransaction = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const deleteTask = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await fetch(`/api/task/${task.id}`, {
       method: "DELETE",
@@ -84,9 +84,7 @@ export const EditTaskForm: React.FC<{
         }}
       />
       <Button type="submit">Edit Task</Button>
-      <DangerButton onClick={deleteTransaction}>
-        Delete Transaction
-      </DangerButton>
+      <DangerButton onClick={deleteTask}>Delete Task</DangerButton>
     </form>
   );
 };

@@ -1,4 +1,5 @@
 import React, { Children } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { StartTrackingButton, StopTrackingButton } from "./AddButton";
 
@@ -100,8 +101,8 @@ export const TaskItemWrapper = styled.div`
 export const TrackingControlls = styled.ul`
   display: flex;
   flex-direction: row;
-  margin:auto; 
-  margin-right:1em;
+  margin: auto;
+  margin-right: 1em;
 `;
 
 export const TaskList = styled.ul`
@@ -154,12 +155,11 @@ export const TaskItem: React.FC<TaskItemProps> = ({
   task,
   onClick = () => {},
 }) => {
-  const { name, description, created, labels, updatedAt, trackings } = task;
+  const { name, description, labels, id, trackings } = task;
   return (
     <TaskItemWrapper>
       <TaskItemStyle
         onClick={() => {
-          console.log("clicked transaction ID = ", task.id);
           onClick(task);
         }}
       >
@@ -168,7 +168,6 @@ export const TaskItem: React.FC<TaskItemProps> = ({
           <div>
             <TaskTitle>{name}</TaskTitle>
             <TaskDescription>{description}</TaskDescription>
-            <TaskDate>{created && created.toLocaleString()}</TaskDate>
           </div>
           <LabelList>
             {labels &&
@@ -184,9 +183,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
           </TrackingList>
         </TaskFlex>
       </TaskItemStyle>
-      <TrackingControlls>
-      {children}
-      </TrackingControlls>
+      <TrackingControlls>{children}</TrackingControlls>
     </TaskItemWrapper>
   );
 };
