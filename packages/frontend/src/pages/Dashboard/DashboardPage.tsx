@@ -6,7 +6,7 @@ import { Task, TaskItem, TaskList } from "./components/TransactionList";
 export const DashboardPage =  () => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  const fetchTasks = async function () {
+  const fetchTasks = async () => {
     const taskRequest = await fetch("/api/task", {
       headers: { "content-type": "application/json" },
     });
