@@ -2,17 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Layout } from '../../components/Layout';
 import { Modal } from '../../components/Modal';
-import { AddButton, EditTrackingButton, StartTrackingButton, StopTrackingButton } from './components/AddButton';
+import {
+  AddButton,
+  EditTrackingButton,
+  FilterTaskButton,
+  StartTrackingButton,
+  StopTrackingButton,
+} from './components/Buttons';
 import { AddTaskForm } from './components/AddTaskForm';
 import { EditTaskForm } from './components/EditTaskForm';
+import { AddTrackingForm } from './components/startTracking';
 import { Task, TaskItem, TaskList } from './components/TaskList';
 import { Timer } from './components/Timer';
 
 export default () => {
   const [addTaskVisible, setAddTaskVisible] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
+  const [startTrackingVisible, setStartTrackingVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [addTimer, setAddTimer] = useState(false);
+  const [sortType, setSortType] = useState('name');
   const history = useHistory();
 
   const fetchTasks = async () => {
@@ -26,27 +35,36 @@ export default () => {
     }
   };
 
-  const createTracking = async (task: Task) => {
-    const trackingRequest = await fetch(`/api/tracking/${task.id}`, {
-      body: JSON.stringify({
-        description: 'test 2',
-        name: task.name,
-      }),
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-    });
-    console.log(trackingRequest);
-    fetchTasks();
-  };
-
   const routeChange = (id: string) => {
     const path = `/task/${id}`;
     history.push(path);
   };
 
+  const sortArray = () => {
+    console.log('sort');
+    const sorted = [...tasks].sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+    setTasks(sorted);
+  };
+
   useEffect(() => {
     fetchTasks();
   }, []);
+
+  useEffect(() => {
+    console.log(sortType);
+    sortArray();
+    console.log(tasks);
+  }, [setSortType]);
 
   return (
     <Layout>
@@ -59,6 +77,7 @@ export default () => {
       >
         <div>
           <h2>Dashboard</h2>
+          <FilterTaskButton onClick={() => sortArray()} />
           <AddButton
             onClick={() => {
               if (!editTask) {
@@ -115,12 +134,30 @@ export default () => {
 
             <StartTrackingButton
               onClick={() => {
-                createTracking(task);
+                if (!startTrackingVisible) {
+                  setStartTrackingVisible(true);
+                }
                 setAddTimer(true);
               }}
             />
             <StopTrackingButton />
             <EditTrackingButton onClick={() => routeChange(task.id)} />
+            {startTrackingVisible && (
+              <Modal
+                title="Start Tracking"
+                onCancel={() => {
+                  setStartTrackingVisible(false);
+                }}
+              >
+                <AddTrackingForm
+                  afterSubmit={() => {
+                    setStartTrackingVisible(false);
+                    fetchTasks();
+                  }}
+                  task={task}
+                />
+              </Modal>
+            )}
           </TaskItem>
         ))}
       </TaskList>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Layout } from '../../components/Layout';
 import { Modal } from '../../components/Modal';
-import { AddButton } from '../Dashboard/components/AddButton';
+import { AddButton } from '../Dashboard/components/Buttons';
 import { Task, Tracking } from '../Dashboard/components/TaskList';
 import { AddTrackingForm } from './components/AddTrackingForm';
 import { EditTrackingForm } from './components/EditTrackingForm';
@@ -71,7 +71,7 @@ export default () => {
       )}
       {editTracking && (
         <Modal
-          title="Edit Task"
+          title="Edit Tracking"
           onCancel={() => {
             setEditTracking(null);
           }}

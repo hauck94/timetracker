@@ -50,8 +50,7 @@ const LabelList = styled.ul`
 const TrackingList = styled.ul`
   list-style: none;
   flex-grow: 1;
-  font-size: 0.8rem;s
-
+  font-size: 0.8rem;
   align-self: flex-end;
   display: flex;
   & > li {
@@ -94,13 +93,11 @@ export const TaskItemStyle = styled.div`
 export const TaskItemWrapper = styled.div`
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
 `;
 
 export const TrackingControlls = styled.ul`
   display: flex;
-  flex-direction: row;
-  margin: auto;
-  margin-right: 1em;
 `;
 
 export const TaskList = styled.ul`
