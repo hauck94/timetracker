@@ -21,14 +21,12 @@ export default () => {
   const [startTrackingVisible, setStartTrackingVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [addTimer, setAddTimer] = useState(false);
-  const [sortType, setSortType] = useState('name');
   const history = useHistory();
 
   const fetchTasks = async () => {
     const taskRequest = await fetch('/api/task', {
       headers: { 'content-type': 'application/json' },
     });
-    console.log(taskRequest);
     if (taskRequest.status === 200) {
       const taskJSON = await taskRequest.json();
       setTasks(taskJSON.data);
@@ -41,7 +39,6 @@ export default () => {
   };
 
   const sortArray = () => {
-    console.log('sort');
     const sorted = [...tasks].sort((a, b) => {
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
@@ -59,12 +56,6 @@ export default () => {
   useEffect(() => {
     fetchTasks();
   }, []);
-
-  useEffect(() => {
-    console.log(sortType);
-    sortArray();
-    console.log(tasks);
-  }, [setSortType]);
 
   return (
     <Layout>
