@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Layout } from "../../components/Layout";
 import { AddButton} from "./components/AddButton";
 import { Task, TaskItem, TaskList } from "./components/TransactionList";
+import { AddTaskForm } from "./components/AddTaskForm";
 
 export const DashboardPage =  () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [addTaskVisible, setAddTaskVisible] = useState(false);
 
   const fetchTasks = async () => {
     const taskRequest = await fetch("/api/task", {
@@ -32,9 +34,22 @@ export const DashboardPage =  () => {
       >
         <div>
           <h2>Dashboard</h2>
-          <AddButton/>
+          <AddButton
+            onClick={() => {
+              setAddTaskVisible(true);
+            }}
+          />
+
         </div>
       </div>
+      {addTaskVisible && (
+        <AddTaskForm
+          afterSubmit={() => {
+            setAddTaskVisible(false);
+            fetchTasks();
+          }}
+        />
+      )}
       <TaskList>
         {tasks.map((task) => (
           <TaskItem
