@@ -12,7 +12,7 @@ import {
 import { AddTaskForm } from './components/AddTaskForm';
 import { EditTaskForm } from './components/EditTaskForm';
 import { AddTrackingForm } from './components/startTracking';
-import { Task, TaskItem, TaskList } from './components/TaskList';
+import { Task, TaskItem, TaskList, Tracking } from './components/TaskList';
 import { Timer } from './components/Timer';
 
 export default () => {
@@ -20,8 +20,24 @@ export default () => {
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [startTrackingVisible, setStartTrackingVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [addTimer, setAddTimer] = useState(false);
+
+  const [taskTracking, setTaskTracking] = useState<Task>();
+  const [addTracking, setAddTracking] = useState<Tracking | null>(null);
   const history = useHistory();
+
+  const sortTrackingsByCreated = (task: Task) => {
+    task.trackings.sort((a, b) => {
+      const dateA = new Date(a.created);
+      const dateB = new Date(b.created);
+      if (dateA < dateB) {
+        return -1;
+      }
+      if (dateA > dateB) {
+        return 1;
+      }
+      return 0;
+    });
+  };
 
   const fetchTasks = async () => {
     const taskRequest = await fetch('/api/task', {
@@ -30,6 +46,13 @@ export default () => {
     if (taskRequest.status === 200) {
       const taskJSON = await taskRequest.json();
       setTasks(taskJSON.data);
+      [...tasks].forEach((task) => {
+        console.log('before', task.trackings);
+
+        sortTrackingsByCreated(task);
+
+        console.log('after', task.trackings);
+      });
     }
   };
 
@@ -51,6 +74,15 @@ export default () => {
       return 0;
     });
     setTasks(sorted);
+  };
+
+  const findTaskById = (id: string) => {
+    
+    fetchTasks();
+    const task = [...tasks].filter((taskT) => taskT.id === id);
+    if (task.length) {
+      return task[0];
+    }
   };
 
   useEffect(() => {
@@ -121,14 +153,14 @@ export default () => {
             }}
             task={task}
           >
-            {addTimer && <Timer />}
+            
+            {addTracking && <Timer tracking={addTracking} />}
 
             <StartTrackingButton
               onClick={() => {
                 if (!startTrackingVisible) {
                   setStartTrackingVisible(true);
                 }
-                setAddTimer(true);
               }}
             />
             <StopTrackingButton />
@@ -141,11 +173,18 @@ export default () => {
                 }}
               >
                 <AddTrackingForm
-                  afterSubmit={() => {
-                    setStartTrackingVisible(false);
-                    fetchTasks();
-                  }}
                   task={task}
+                  afterSubmit={
+                    () => {
+                      setStartTrackingVisible(false);
+                      fetchTasks();
+
+                      console.log("find", findTaskById(task.id));
+
+                      findTaskById(task.id);
+                    }
+                    // setAddTracking(task.trackings[task.trackings.length - 1]);
+                  }
                 />
               </Modal>
             )}

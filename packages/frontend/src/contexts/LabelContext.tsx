@@ -12,7 +12,7 @@ const initialContext = {
   actions: {
     refetch: async () => undefined,
   },
-  labels: [] as Option[],
+  labels: [],
 };
 
 export const labelContext = React.createContext<LabelContext>(initialContext);
@@ -26,8 +26,8 @@ export const LabelProvider: React.FC = ({ children }) => {
         'content-type': 'application/json',
       },
     });
-    const labelJson = await labelRequest.json();
-    setLabels(labelJson.data as Option[]);
+    const labelJson: Option[] = await labelRequest.json();
+    setLabels(labelJson);
   };
 
   useEffect(() => {

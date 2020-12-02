@@ -6,25 +6,24 @@ import { labelContext } from '../../../contexts/LabelContext';
 
 export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit }) => {
   const {
-    labels,
     actions: { refetch: refetchLabels },
   } = useContext(labelContext);
   const [values, setValues] = useState({
     description: '',
-    labels: [] as Option[],
     name: '',
-    value: '',
   });
+  const [labels, setLabels] = useState<Option[]>([]);
   const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(labels);
     setValues({ ...values, [e.target.name]: e.target.value });
   };
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(values);
 
     await fetch('/api/task', {
       body: JSON.stringify({
         ...values,
+        labels,
       }),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
@@ -48,7 +47,8 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit
         options={labels}
         onChangeSelectedOptions={(options) => {
           console.log('options change', options);
-          setValues({ ...values, labels: options });
+          setValues({ ...values });
+          setLabels(options);
         }}
       />
       <Button type="submit">Add Task</Button>
