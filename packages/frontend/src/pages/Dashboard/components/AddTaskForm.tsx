@@ -14,7 +14,6 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit
   });
   const [labels, setLabels] = useState<Option[]>([]);
   const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(labels);
     setValues({ ...values, [e.target.name]: e.target.value });
   };
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +45,6 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit
         label="Labels"
         options={labels}
         onChangeSelectedOptions={(options) => {
-          console.log('options change', options);
           setValues({ ...values });
           setLabels(options);
         }}

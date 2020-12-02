@@ -22,7 +22,6 @@ export const EditTrackingForm: React.FC<{
   };
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('values', values);
 
     await fetch(`/api/tracking/${tracking.id}`, {
       body: JSON.stringify({
@@ -32,11 +31,6 @@ export const EditTrackingForm: React.FC<{
       method: 'PATCH',
     });
 
-    console.log(
-      JSON.stringify({
-        ...values,
-      }),
-    );
     afterSubmit();
   };
 

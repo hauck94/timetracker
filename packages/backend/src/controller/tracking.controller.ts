@@ -77,10 +77,7 @@ export const patchTracking = async (req: Request, res: Response) => {
     tracking.startTime = startTime;
     tracking.updatedAt = updatedAt;
 
-    console.log(await trackingRepository.save(tracking));
-
     const createdTracking = await trackingRepository.save(tracking);
-    console.log(createdTracking);
 
     res.send({
       data: createdTracking,

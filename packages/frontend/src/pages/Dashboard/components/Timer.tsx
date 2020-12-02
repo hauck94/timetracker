@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Tracking } from './TaskList';
 
 export const Timer: React.FC<{ tracking: Tracking }> = (tracking) => {
-  console.log('Tracking NAME: ', tracking.tracking.name);
 
   const start: Date = new Date(tracking.tracking.created);
   const [current, setTimer] = useState<Date>();

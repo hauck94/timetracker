@@ -25,7 +25,6 @@ export const EditTaskForm: React.FC<{
   };
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('values', values);
 
     await fetch(`/api/task/${task.id}`, {
       body: JSON.stringify({
@@ -34,12 +33,6 @@ export const EditTaskForm: React.FC<{
       headers: { 'Content-Type': 'application/json' },
       method: 'PATCH',
     });
-
-    console.log(
-      JSON.stringify({
-        ...values,
-      }),
-    );
 
     await refetchLabels();
     afterSubmit();
@@ -71,7 +64,6 @@ export const EditTaskForm: React.FC<{
         options={labels}
         initialState={{ inputValue: '', selectedOptions: values.labels }}
         onChangeSelectedOptions={(options) => {
-          console.log('options change', options);
           setValues({ ...values, labels: options });
         }}
       />

@@ -16,6 +16,7 @@ export class Helper {
 
     this.app.use('/api', globalRouter);
     const config = await getConnectionOptions('default');
+
     this.dbConnection = await createConnection(
       // tslint:disable-next-line: prefer-object-spread
       Object.assign({}, config, { database: process.env.DBDATABASE }),

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Layout } from '../../components/Layout';
 import { Modal } from '../../components/Modal';
@@ -14,15 +14,16 @@ import { EditTaskForm } from './components/EditTaskForm';
 import { AddTrackingForm } from './components/startTracking';
 import { Task, TaskItem, TaskList, Tracking } from './components/TaskList';
 import { Timer } from './components/Timer';
+import { Input } from '../../components/Input';
 
 export default () => {
   const [addTaskVisible, setAddTaskVisible] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [startTrackingVisible, setStartTrackingVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [filteredTask, setFilteredTask] = useState<Task[]>([]);
 
-  const [taskTracking, setTaskTracking] = useState<Task>();
-  const [addTracking, setAddTracking] = useState<Tracking | null>(null);
+  const [addTracking] = useState<Tracking | null>(null);
   const history = useHistory();
 
   const sortTrackingsByCreated = (task: Task) => {
@@ -46,12 +47,10 @@ export default () => {
     if (taskRequest.status === 200) {
       const taskJSON = await taskRequest.json();
       setTasks(taskJSON.data);
+
+      setFilteredTask(taskJSON.data);
       [...tasks].forEach((task) => {
-        console.log('before', task.trackings);
-
         sortTrackingsByCreated(task);
-
-        console.log('after', task.trackings);
       });
     }
   };
@@ -61,27 +60,39 @@ export default () => {
     history.push(path);
   };
 
-  const sortArray = () => {
-    const sorted = [...tasks].sort((a, b) => {
-      const nameA = a.name.toLowerCase();
-      const nameB = b.name.toLowerCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
-    setTasks(sorted);
+  const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
+    filterArray(e.target.name, e.target.value);
   };
 
-  const findTaskById = (id: string) => {
-    
-    fetchTasks();
-    const task = [...tasks].filter((taskT) => taskT.id === id);
-    if (task.length) {
-      return task[0];
+  const filterArray = (type: string, input: string) => {
+    switch (type) {
+      case 'name':
+        const filteredByName = tasks.filter((task) => {
+          return task.name.toLocaleLowerCase().indexOf(input) !== -1;
+        });
+        setFilteredTask(filteredByName);
+        break;
+      case 'description':
+        const filteredByDescription = tasks.filter((task) => {
+          return task.description.toLocaleLowerCase().indexOf(input) !== -1;
+        });
+        setFilteredTask(filteredByDescription);
+        break;
+      case 'label':
+        let filterByLabel: Task[] = [];
+        tasks.forEach((task) => {
+          task.labels.filter((label) => {
+            if (label.name.toLocaleLowerCase().indexOf(input) !== -1) {
+              filterByLabel.push(task);
+            }
+          });
+        });
+        if (input === '') {
+          filterByLabel = tasks;
+        }
+        filterByLabel = filterByLabel.filter((val, id, array) => array.indexOf(val) === id);
+        setFilteredTask(filterByLabel);
+        break;
     }
   };
 
@@ -100,7 +111,10 @@ export default () => {
       >
         <div>
           <h2>Dashboard</h2>
-          <FilterTaskButton onClick={() => sortArray()} />
+          <FilterTaskButton />
+          <Input name="name" type="text" label="Name" onChange={fieldDidChange} required={true} />
+          <Input name="description" type="text" label="description" onChange={fieldDidChange} required={true} />
+          <Input name="label" type="text" label="label" onChange={fieldDidChange} required={true} />
           <AddButton
             onClick={() => {
               if (!editTask) {
@@ -143,7 +157,7 @@ export default () => {
       )}
 
       <TaskList>
-        {tasks.map((task) => (
+        {filteredTask.map((task) => (
           <TaskItem
             key={task.id}
             onClick={() => {
@@ -153,7 +167,6 @@ export default () => {
             }}
             task={task}
           >
-            
             {addTracking && <Timer tracking={addTracking} />}
 
             <StartTrackingButton
@@ -178,10 +191,6 @@ export default () => {
                     () => {
                       setStartTrackingVisible(false);
                       fetchTasks();
-
-                      console.log("find", findTaskById(task.id));
-
-                      findTaskById(task.id);
                     }
                     // setAddTracking(task.trackings[task.trackings.length - 1]);
                   }

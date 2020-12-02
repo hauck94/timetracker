@@ -16,7 +16,6 @@ export const AddTrackingForm: React.FC<{
   };
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(values);
 
     await fetch(`/api/tracking/${task.id}`, {
       body: JSON.stringify({
