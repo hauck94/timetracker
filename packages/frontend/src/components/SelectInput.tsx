@@ -52,7 +52,7 @@ const DropdownHolder = styled.div`
   }
 `;
 
-const Tag = styled.div`
+const Label = styled.div`
   border-radius: 5px;
   background-color: ${(props) => props.theme.colors.primary};
   position: relative;
@@ -132,13 +132,31 @@ export const SelectInput: React.FC<{ label: string }> = ({ label }) => {
       setSelectedOptions([...selectedOptions, createOption(inputValue)]);
       setInputValue("");
     }
+    if (e.key === "Backspace" && inputValue.length === 0) {
+        setSelectedOptions(selectedOptions.splice(0, selectedOptions.length - 1));
+      }
+    };
+  
+    const removeValue = (value: Option) => {
+      setSelectedOptions(
+        selectedOptions.filter((selectedOption) => value.id !== selectedOption.id)
+      );
   };
 
   return (
     <DropdownHolder>
       <InputContainer>
         {selectedOptions.map((option) => (
-          <Tag key={option.id}>{option.label}</Tag>
+            <Label key={option.id}>
+            {option.label}
+            <button
+              onClick={() => {
+                removeValue(option);
+              }}
+            >
+              x
+            </button>
+          </Label>
         ))}
         <InputField
           id={id.current}
