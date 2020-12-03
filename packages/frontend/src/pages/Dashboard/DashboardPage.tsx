@@ -4,6 +4,7 @@ import { AddButton} from "./components/AddButton";
 import { Task, TaskItem, TaskList } from "./components/TransactionList";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { Modal } from "../../components/Modal";
+import { SelectInput } from "../../components/SelectInput";
 
 export const DashboardPage =  () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -26,6 +27,7 @@ export const DashboardPage =  () => {
 
   return (
     <Layout>
+      <SelectInput label="Labels" />
       <div
         css={`
           display: flex;

@@ -46,6 +46,12 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({
           onChange={fieldDidChange}
           required
         />
+        <Input
+          name="label"
+          label="Label"
+          type="text"
+          onChange={fieldDidChange}
+        />
         <Button type="submit">Add Task</Button>
       </form>
     </>
