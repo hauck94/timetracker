@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useReducer } from "react";
 import styled from "styled-components";
 
 const InputLabel = styled.label`
@@ -106,43 +106,121 @@ interface Option {
   id: string;
 }
 
+interface SelectState {
+    inputValue: string;
+    selectedOptions: Option[];
+  }
+  
+  type SelectAction =
+    | {
+        type: "change-input";
+        event: React.ChangeEvent<HTMLInputElement>;
+      }
+    | {
+        type: "remove-value";
+        value: Option;
+      }
+    | {
+        type: "select-value";
+        value: Option;
+      }
+    | {
+        type: "key-down";
+        event: React.KeyboardEvent<HTMLInputElement>;
+      };
+  
+  const createOption = (optionValue: string): Option => {
+    return {
+      label: optionValue,
+      id: `${optionValue.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`,
+    };
+  };
+  function reducer(oldState: SelectState, action: SelectAction): SelectState {
+    switch (action.type) {
+      case "change-input":
+        return { ...oldState, inputValue: action.event.target.value };
+      case "remove-value":
+        return {
+          ...oldState,
+          selectedOptions: oldState.selectedOptions.filter(
+            (selectedOption) => action.value.id !== selectedOption.id
+          ),
+        };
+      case "key-down":
+        if (
+          action.event.key === "Enter" &&
+          !oldState.selectedOptions.some(
+            (option) => option.label === oldState.inputValue
+          )
+        ) {
+          return {
+            ...oldState,
+            selectedOptions: [
+              ...oldState.selectedOptions,
+              createOption(oldState.inputValue),
+            ],
+            inputValue: "",
+          };
+        }
+        if (
+          action.event.key === "Backspace" &&
+          oldState.inputValue.length === 0
+        ) {
+          return {
+            ...oldState,
+            selectedOptions: oldState.selectedOptions.splice(
+              0,
+              oldState.selectedOptions.length - 1
+            ),
+          };
+        }
+        return oldState;
+      case "select-value":
+        return {
+          ...oldState,
+          selectedOptions: [...oldState.selectedOptions, action.value],
+          inputValue: "",
+        };
+  
+      default:
+        return oldState;
+    }
+  }
+
 export const SelectInput: React.FC<{ label: string }> = ({ label }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+    const initialState = {
+        inputValue: "",
+        selectedOptions: [],
+      };
+      const [{ inputValue, selectedOptions }, dispatch] = useReducer(
+        reducer,
+        initialState
+      );
+    
 
   const id = useRef(
     `${label.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`
   );
 
-  const createOption = (optionValue: string): Option => {
-    return {
-      label: optionValue,
-      id: `${optionValue.replace(" ", "-")}-${Math.floor(
-        Math.random() * 10000
-      )}`,
-    };
-  };
-
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.currentTarget.value);
+    e.persist();
+    dispatch({ type: "change-input", event: e });
+
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setSelectedOptions([...selectedOptions, createOption(inputValue)]);
-      setInputValue("");
-    }
-    if (e.key === "Backspace" && inputValue.length === 0) {
-        setSelectedOptions(selectedOptions.splice(0, selectedOptions.length - 1));
-      }
-    };
+    e.persist();
+    dispatch({ type: "key-down", event: e });
+  };
   
     const removeValue = (value: Option) => {
-      setSelectedOptions(
-        selectedOptions.filter((selectedOption) => value.id !== selectedOption.id)
-      );
-  };
-
+        dispatch({ type: "remove-value", value });
+    };
+    
+    const selectValue = (value: Option) => {
+        dispatch({ type: "select-value", value });
+    };
+    
   return (
     <DropdownHolder>
       <InputContainer>
