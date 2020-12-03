@@ -3,6 +3,7 @@ import { Layout } from "../../components/Layout";
 import { AddButton} from "./components/AddButton";
 import { Task, TaskItem, TaskList } from "./components/TransactionList";
 import { AddTaskForm } from "./components/AddTaskForm";
+import { Modal } from "../../components/Modal";
 
 export const DashboardPage =  () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -43,12 +44,20 @@ export const DashboardPage =  () => {
         </div>
       </div>
       {addTaskVisible && (
-        <AddTaskForm
-          afterSubmit={() => {
+        <Modal
+        title="Add Transaction"
+        onCancel={() => {
             setAddTaskVisible(false);
-            fetchTasks();
+            //fetchTasks();
           }}
-        />
+        >
+      <AddTaskForm
+            afterSubmit={() => {
+              setAddTaskVisible(false);
+              fetchTasks();
+            }}
+          />
+        </Modal>
       )}
       <TaskList>
         {tasks.map((task) => (
