@@ -4,7 +4,13 @@ import { AddButton} from "./components/AddButton";
 import { Task, TaskItem, TaskList } from "./components/TransactionList";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { Modal } from "../../components/Modal";
-import { SelectInput } from "../../components/SelectInput";
+import {
+  SelectInput,
+  SelectAction,
+  SelectState,
+  LabelProps,
+  initialReducer,
+} from "../../components/SelectInput";
 
 export const DashboardPage =  () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -25,6 +31,21 @@ export const DashboardPage =  () => {
     fetchTasks();
   }, []);
 
+  const customReducer = (
+    state: SelectState,
+    action: SelectAction
+  ): SelectState => {
+    switch (action.type) {
+      case "change-input":
+        return state;
+      default:
+        return initialReducer(state, action);
+    }
+  };
+  const renderLabel = ({ label, ...props }: LabelProps) => (
+    <label {...props}>{label}</label>
+  );
+
   return (
     <Layout>
       <SelectInput
@@ -33,6 +54,8 @@ export const DashboardPage =  () => {
           { id: "1", label: "React" },
           { id: "2", label: "Javascript" },
         ]}
+        reducer={customReducer}
+        renderLabelField={renderLabel}
       />
 
       <div
@@ -54,7 +77,7 @@ export const DashboardPage =  () => {
       </div>
       {addTaskVisible && (
         <Modal
-        title="Add Transaction"
+        title="Add Task"
         onCancel={() => {
             setAddTaskVisible(false);
             //fetchTasks();

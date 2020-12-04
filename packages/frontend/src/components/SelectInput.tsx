@@ -135,17 +135,17 @@ const Tag = styled.div`
   }
 `;
 
-interface Option {
+export interface Option {
   label: string;
   id: string;
 }
 
-interface SelectState {
+export interface SelectState {
   inputValue: string;
   selectedOptions: Option[];
 }
 
-type SelectAction =
+export type SelectAction =
   | {
       type: "change-input";
       event: React.ChangeEvent<HTMLInputElement>;
@@ -169,7 +169,10 @@ const createOption = (optionValue: string): Option => {
     id: `${optionValue.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`,
   };
 };
-function reducer(oldState: SelectState, action: SelectAction): SelectState {
+export function initialReducer(
+    oldState: SelectState,
+    action: SelectAction
+  ): SelectState {
   switch (action.type) {
     case "change-input":
       return { ...oldState, inputValue: action.event.target.value };
@@ -221,25 +224,7 @@ function reducer(oldState: SelectState, action: SelectAction): SelectState {
   }
 }
 
-export const SelectInput: React.FC<{ label: string; options: Option[] }> = ({
-  label,
-  options,
-}) => {
-  const initialState = {
-    inputValue: "",
-    selectedOptions: [],
-  };
-  const [{ inputValue, selectedOptions }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const id = useRef(
-    `${label.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`
-  );
-
-  const filterOptions = (
+const initialFilterOptions = (
     options: Option[],
     filterValue: string,
     selectedOptions: Option[]
@@ -257,6 +242,42 @@ export const SelectInput: React.FC<{ label: string; options: Option[] }> = ({
           )
       );
   };
+  
+  export type LabelProps = {
+    htmlFor: string;
+    label: string;
+  };
+  
+  export const SelectInput: React.FC<{
+    label: string;
+    options: Option[];
+    reducer?: (state: SelectState, action: SelectAction) => SelectState;
+    renderLabelField?: (props: LabelProps) => React.ReactNode;
+    filterOptions?: (
+      options: Option[],
+      filterValue: string,
+      selectedOptions: Option[]
+    ) => Option[];
+  }> = ({
+  label,
+  options,
+  reducer = initialReducer,
+  renderLabelField,
+  filterOptions = initialFilterOptions,
+}) => {
+  const initialState = {
+    inputValue: "",
+    selectedOptions: [],
+  };
+  const [{ inputValue, selectedOptions }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const id = useRef(
+    `${label.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`
+  );
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
@@ -300,7 +321,12 @@ export const SelectInput: React.FC<{ label: string; options: Option[] }> = ({
           onKeyDown={onKeyDown}
           placeholder=" "
         />
-        <InputLabel htmlFor={id.current}>{label}</InputLabel>
+        {renderLabelField ? (
+          renderLabelField({ htmlFor: id.current, label })
+        ) : (
+          <InputLabel htmlFor={id.current}>{label}</InputLabel>
+        )}
+
       </InputContainer>
       <div style={{ marginBottom: "16px", position: "relative" }}>
         <Dropdown>
