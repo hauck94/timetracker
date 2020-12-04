@@ -1,4 +1,4 @@
-import React, { useState, useRef, useReducer } from "react";
+import React, { useState, useRef, useReducer, useEffect } from "react";
 import styled from "styled-components";
 
 const InputLabel = styled.label`
@@ -86,7 +86,7 @@ const DropdownHolder = styled.div`
   }
 `;
 
-const Tag = styled.div`
+const Label = styled.div`
   border-radius: 5px;
   background-color: ${(props) => props.theme.colors.primary};
   position: relative;
@@ -136,8 +136,8 @@ const Tag = styled.div`
 `;
 
 export interface Option {
-  label: string;
-  id: string;
+  name: string;
+  id?: string;
 }
 
 export interface SelectState {
@@ -165,8 +165,7 @@ export type SelectAction =
 
 const createOption = (optionValue: string): Option => {
   return {
-    label: optionValue,
-    id: `${optionValue.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`,
+    name: optionValue,
   };
 };
 export function initialReducer(
@@ -187,7 +186,7 @@ export function initialReducer(
       if (
         action.event.key === "Enter" &&
         !oldState.selectedOptions.some(
-          (option) => option.label === oldState.inputValue
+          (option) => option.name === oldState.inputValue
         )
       ) {
         return {
@@ -203,6 +202,7 @@ export function initialReducer(
         action.event.key === "Backspace" &&
         oldState.inputValue.length === 0
       ) {
+        action.event.preventDefault();
         return {
           ...oldState,
           selectedOptions: oldState.selectedOptions.splice(
@@ -229,16 +229,10 @@ const initialFilterOptions = (
     filterValue: string,
     selectedOptions: Option[]
   ): Option[] => {
-    return options
-      .filter((option) =>
-        option.label.toLowerCase().includes(filterValue.toLowerCase())
-      )
-      .filter(
-        (option) =>
+    return options.filter((option) =>
+        option.name.toLowerCase().includes(filterValue.toLowerCase())).filter((option) =>
           !selectedOptions.some((selectedOption) =>
-            selectedOption.label
-              .toLowerCase()
-              .includes(option.label.toLowerCase())
+            selectedOption.name.toLowerCase().includes(option.name.toLowerCase())
           )
       );
   };
@@ -258,12 +252,14 @@ const initialFilterOptions = (
       filterValue: string,
       selectedOptions: Option[]
     ) => Option[];
+    onChangeSelectedOptions?: (options: Option[]) => void;
   }> = ({
   label,
   options,
   reducer = initialReducer,
   renderLabelField,
   filterOptions = initialFilterOptions,
+  onChangeSelectedOptions = () => {},
 }) => {
   const initialState = {
     inputValue: "",
@@ -274,6 +270,10 @@ const initialFilterOptions = (
     initialState
   );
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    onChangeSelectedOptions(selectedOptions);
+  }, [selectedOptions]);
 
   const id = useRef(
     `${label.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`
@@ -302,8 +302,8 @@ const initialFilterOptions = (
     <DropdownHolder>
       <InputContainer>
         {selectedOptions.map((option) => (
-          <Tag key={option.id}>
-            {option.label}
+          <Label key={option.name}>
+            {option.name}
             <button
               onClick={() => {
                 removeValue(option);
@@ -311,7 +311,7 @@ const initialFilterOptions = (
             >
               x
             </button>
-          </Tag>
+          </Label>
         ))}
         <InputField
           ref={inputRef}
@@ -320,6 +320,7 @@ const initialFilterOptions = (
           onChange={onChangeInput}
           onKeyDown={onKeyDown}
           placeholder=" "
+          size={inputValue.length || 1}
         />
         {renderLabelField ? (
           renderLabelField({ htmlFor: id.current, label })
@@ -332,12 +333,12 @@ const initialFilterOptions = (
         <Dropdown>
           {filterOptions(options, inputValue, selectedOptions).map((option) => (
             <DropdownItem
-              key={`dropdown-item-${option.id}`}
+              key={`dropdown-item-${option.name}`}
               onClick={() => {
                 selectValue(option);
               }}
             >
-              {option.label}
+              {option.name}
             </DropdownItem>
           ))}
         </Dropdown>

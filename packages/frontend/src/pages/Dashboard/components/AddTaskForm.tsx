@@ -1,15 +1,21 @@
-import React, { useState, ChangeEvent } from "react";
-//import { authContext } from "../../../contexts/AuthenticationContext";
+import React, { useState, ChangeEvent, useContext } from "react";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
+import { labelContext } from "../../../contexts/LabelContext";
+import { SelectInput, Option } from "../../../components/SelectInput";
 
 export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({
   afterSubmit,
 }) => {
+  const {
+    labels,
+    actions: { refetch: refetchTags },
+  } = useContext(labelContext);
   const [values, setValues] = useState({
     name: "",
     description: "",
     value: "",
+    labels: [] as Option[],
   });
   const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -25,6 +31,7 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({
         ...values,
       }),
     });
+    await refetchTags();
     afterSubmit();
   };
   return (
@@ -44,12 +51,15 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({
           onChange={fieldDidChange}
           required
         />
-        <Input
-          name="label"
-          label="Label"
-          type="text"
-          onChange={fieldDidChange}
-        />
+        <SelectInput
+        label="Labels"
+        options={labels}
+        onChangeSelectedOptions={(options) => {
+          console.log("options change", options);
+          setValues({ ...values, labels: options });
+        }}
+      />
+
         <Button type="submit">Add Task</Button>
       </form>
     </>

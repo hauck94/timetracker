@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components/macro";
+import { LabelProvider } from "../contexts/LabelContext";
 
 const headerHeight = "85px";
 const footerHeight = "50px";
@@ -37,7 +38,7 @@ const NavigationItem = styled.li`
 
 export const Layout: React.FC = ({ children }) => {
   return (
-    <>
+    <LabelProvider>
       <Header>
         <div
           css={`
@@ -61,6 +62,6 @@ export const Layout: React.FC = ({ children }) => {
       </Header>
       <Main>{children}</Main>
       <Footer>© 2020 AWD Lecture</Footer>
-    </>
+      </LabelProvider>
   );
 };

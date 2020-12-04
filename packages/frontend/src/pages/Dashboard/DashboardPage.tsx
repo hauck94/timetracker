@@ -31,33 +31,8 @@ export const DashboardPage =  () => {
     fetchTasks();
   }, []);
 
-  const customReducer = (
-    state: SelectState,
-    action: SelectAction
-  ): SelectState => {
-    switch (action.type) {
-      case "change-input":
-        return state;
-      default:
-        return initialReducer(state, action);
-    }
-  };
-  const renderLabel = ({ label, ...props }: LabelProps) => (
-    <label {...props}>{label}</label>
-  );
-
   return (
     <Layout>
-      <SelectInput
-        label="Labels"
-        options={[
-          { id: "1", label: "React" },
-          { id: "2", label: "Javascript" },
-        ]}
-        reducer={customReducer}
-        renderLabelField={renderLabel}
-      />
-
       <div
         css={`
           display: flex;
