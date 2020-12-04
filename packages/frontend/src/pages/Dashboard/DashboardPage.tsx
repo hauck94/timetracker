@@ -4,17 +4,17 @@ import { AddButton} from "./components/AddButton";
 import { Task, TaskItem, TaskList } from "./components/TransactionList";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { Modal } from "../../components/Modal";
-import {
-  SelectInput,
-  SelectAction,
-  SelectState,
-  LabelProps,
-  initialReducer,
-} from "../../components/SelectInput";
+import {SelectInput, SelectAction, SelectState, LabelProps, initialReducer, } from "../../components/SelectInput";
+import { EditTaskForm } from "./components/EditTaskForm";
+
 
 export const DashboardPage =  () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [addTaskVisible, setAddTaskVisible] = useState(false);
+  const [editTask, setEditTask] = useState<Task | null>(
+    null
+  );
+
 
   const fetchTasks = async () => {
     const taskRequest = await fetch("/api/task", {
@@ -44,7 +44,9 @@ export const DashboardPage =  () => {
           <h2>Dashboard</h2>
           <AddButton
             onClick={() => {
-              setAddTaskVisible(true);
+              if (!editTask) {
+                setAddTaskVisible(true);
+              }
             }}
           />
 
@@ -66,13 +68,33 @@ export const DashboardPage =  () => {
           />
         </Modal>
       )}
+      {editTask && (
+        <Modal
+          title="Edit Transaction"
+          onCancel={() => {
+            setEditTask(null);
+          }}
+        >
+          <EditTaskForm
+            afterSubmit={() => {
+              setEditTask(null);
+              fetchTasks();
+            }}
+            task={editTask}
+          />
+        </Modal>
+      )}
       <TaskList>
         {tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-          >
-          </TaskItem>
+           <TaskItem 
+           onClick={() => {
+             if (!addTaskVisible) {
+               setEditTask(task);
+             }
+           }}
+           task={task}
+         ></TaskItem>
+
         ))}
       </TaskList>
     </Layout>

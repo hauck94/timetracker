@@ -95,13 +95,21 @@ export const TaskValue = styled.span`
 `;
 export type TaskItemProps = {
   task: Task;
+  onClick?: (task: Task) => void;
 };
 
 export const TaskItem: React.FC<TaskItemProps> = ({
-  task: { name, description, created, updatedAt, labels },
+  task,
+  onClick = () => {},
 }) => {
+  const { name, description, created, labels } = task;
   return (
-    <TaskItemStyle>
+    <TaskItemStyle
+    onClick={() => {
+      console.log("cliocked transaction");
+      onClick(task);
+    }}
+  >
       <TaskHighlight />
       <TaskFlex>
         <div>
@@ -114,7 +122,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
         <LabelList>
           {labels &&
             labels.map((label: Label) => {
-              return <li key={label.id}></li>;
+              return <li key= {label.id}>{label.name}</li>;
             })}
         </LabelList>
       </TaskFlex>
