@@ -27,7 +27,14 @@ export const DashboardPage =  () => {
 
   return (
     <Layout>
-      <SelectInput label="Labels" />
+      <SelectInput
+        label="Labels"
+        options={[
+          { id: "1", label: "React" },
+          { id: "2", label: "Javascript" },
+        ]}
+      />
+
       <div
         css={`
           display: flex;
