@@ -4,7 +4,7 @@ import { Tracking } from '../../Dashboard/components/TaskList';
 
 const TrackingFlex = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: space-between;
 `;
 
 export const TrackingHighlight = styled.span`
@@ -22,6 +22,7 @@ export const TrackingItemStyle = styled.div`
   min-height: 3rem;
   position: relative;
   padding: 0.7rem 2rem;
+  justify-content: space-between;
   &:hover {
     ${TrackingHighlight} {
       display: block;
@@ -77,9 +78,7 @@ export const TrackingValue = styled.span`
   white-space: nowrap;
 `;
 
-export const TrackingPropertyWrapper = styled.div`
-  margin: 1rem;
-`;
+export const TrackingPropertyWrapper = styled.div``;
 
 export type TrackingItemProps = {
   tracking: Tracking;
@@ -88,30 +87,28 @@ export type TrackingItemProps = {
 
 export const TrackingItem: React.FC<TrackingItemProps> = ({ tracking, onClick = () => undefined }) => {
   const { created, description, endTime, name, startTime, updatedAt } = tracking;
+
   return (
-    <TrackingItemWrapper>
-      <TrackingItemStyle
-        onClick={() => {
-          onClick(tracking);
-        }}
-      >
-        <TrackingHighlight />
-        <TrackingFlex>
-          <TrackingPropertyWrapper>
-            <TrackingTitle>{name}</TrackingTitle>
-            <TrackingDescription>description: {description}</TrackingDescription>
-          </TrackingPropertyWrapper>
-          <TrackingPropertyWrapper>
-            <TrackingDescription>created: {created}</TrackingDescription>
-            <TrackingDescription>updated: {updatedAt}</TrackingDescription>
-          </TrackingPropertyWrapper>
-          <TrackingPropertyWrapper>
-            <TrackingDescription>started: {startTime}</TrackingDescription>
-            <TrackingDescription>ended: {endTime}</TrackingDescription>
-          </TrackingPropertyWrapper>
-          <TrackingTitle>Dauer XX:XX</TrackingTitle>
-        </TrackingFlex>
-      </TrackingItemStyle>
-    </TrackingItemWrapper>
+    <TrackingItemStyle
+      onClick={() => {
+        onClick(tracking);
+      }}
+    >
+      <TrackingHighlight />
+      <TrackingFlex>
+        <TrackingPropertyWrapper>
+          <TrackingTitle>{name}</TrackingTitle>
+          <TrackingDescription>description: {description}</TrackingDescription>
+        </TrackingPropertyWrapper>
+        <TrackingPropertyWrapper>
+          <TrackingDescription>created: {created}</TrackingDescription>
+          <TrackingDescription>updated: {updatedAt}</TrackingDescription>
+        </TrackingPropertyWrapper>
+        <TrackingPropertyWrapper>
+          <TrackingDescription>started: {startTime}</TrackingDescription>
+          <TrackingDescription>ended: {endTime}</TrackingDescription>
+        </TrackingPropertyWrapper>
+      </TrackingFlex>
+    </TrackingItemStyle>
   );
 };

@@ -83,6 +83,7 @@ export const TaskItemStyle = styled.div`
   min-height: 3rem;
   position: relative;
   padding: 0.7rem 2rem;
+  width: 100%;
   &:hover {
     ${TaskHighlight} {
       display: block;
@@ -98,6 +99,8 @@ export const TaskItemWrapper = styled.div`
 
 export const TrackingControlls = styled.ul`
   display: flex;
+  margin: 0;
+  padding: 0;
 `;
 
 export const TaskList = styled.ul`

@@ -2,19 +2,14 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Layout } from '../../components/Layout';
 import { Modal } from '../../components/Modal';
-import {
-  AddButton,
-  EditTrackingButton,
-  FilterTaskButton,
-  StartTrackingButton,
-  StopTrackingButton,
-} from './components/Buttons';
+import { AddButton, EditTrackingButton, StartTrackingButton, StopTrackingButton } from './components/Buttons';
 import { AddTaskForm } from './components/AddTaskForm';
 import { EditTaskForm } from './components/EditTaskForm';
 import { AddTrackingForm } from './components/startTracking';
-import { Task, TaskItem, TaskList, Tracking } from './components/TaskList';
+import { Task, TaskItem, TaskList } from './components/TaskList';
 import { Timer } from './components/Timer';
 import { Input } from '../../components/Input';
+import { FilterPanel } from './components/FilterPanel';
 
 export default () => {
   const [addTaskVisible, setAddTaskVisible] = useState(false);
@@ -23,7 +18,7 @@ export default () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTask, setFilteredTask] = useState<Task[]>([]);
 
-  const [addTracking] = useState<Tracking | null>(null);
+  const [addTracking, setAddTracking] = useState(false);
   const history = useHistory();
 
   const sortTrackingsByCreated = (task: Task) => {
@@ -111,10 +106,12 @@ export default () => {
       >
         <div>
           <h2>Dashboard</h2>
-          <FilterTaskButton />
-          <Input name="name" type="text" label="Name" onChange={fieldDidChange} required={true} />
-          <Input name="description" type="text" label="description" onChange={fieldDidChange} required={true} />
-          <Input name="label" type="text" label="label" onChange={fieldDidChange} required={true} />
+          <FilterPanel>
+            <h3>Filter</h3>
+            <Input name="name" type="text" label="Task Name" onChange={fieldDidChange} />
+            <Input name="description" type="text" label="Task Description" onChange={fieldDidChange} />
+            <Input name="label" type="text" label="Label Name" onChange={fieldDidChange} />
+          </FilterPanel>
           <AddButton
             onClick={() => {
               if (!editTask) {
@@ -167,8 +164,6 @@ export default () => {
             }}
             task={task}
           >
-            {addTracking && <Timer tracking={addTracking} />}
-
             <StartTrackingButton
               onClick={() => {
                 if (!startTrackingVisible) {
@@ -176,7 +171,12 @@ export default () => {
                 }
               }}
             />
-            <StopTrackingButton />
+            <StopTrackingButton
+              onClick={() => {
+                setAddTracking(false);
+                localStorage.removeItem('run');
+              }}
+            />
             <EditTrackingButton onClick={() => routeChange(task.id)} />
             {startTrackingVisible && (
               <Modal
@@ -187,19 +187,19 @@ export default () => {
               >
                 <AddTrackingForm
                   task={task}
-                  afterSubmit={
-                    () => {
-                      setStartTrackingVisible(false);
-                      fetchTasks();
-                    }
-                    // setAddTracking(task.trackings[task.trackings.length - 1]);
-                  }
+                  afterSubmit={() => {
+                    setStartTrackingVisible(false);
+                    setAddTracking(true);
+                    fetchTasks();
+                  }}
                 />
               </Modal>
             )}
           </TaskItem>
         ))}
       </TaskList>
+
+      {(addTracking || localStorage.getItem('run') === 'true') && <Timer />}
     </Layout>
   );
 };
