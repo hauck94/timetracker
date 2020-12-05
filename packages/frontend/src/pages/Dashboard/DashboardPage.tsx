@@ -2,7 +2,13 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Layout } from '../../components/Layout';
 import { Modal } from '../../components/Modal';
-import { AddButton, EditTrackingButton, StartTrackingButton, StopTrackingButton } from './components/Buttons';
+import {
+  AddButton,
+  EditTrackingButton,
+  PauseTrackingButton,
+  StartTrackingButton,
+  StopTrackingButton,
+} from './components/Buttons';
 import { AddTaskForm } from './components/AddTaskForm';
 import { EditTaskForm } from './components/EditTaskForm';
 import { AddTrackingForm } from './components/startTracking';
@@ -17,7 +23,8 @@ export default () => {
   const [startTrackingVisible, setStartTrackingVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTask, setFilteredTask] = useState<Task[]>([]);
-
+  const [pause, setPause] = useState(false);
+  const [TaskEvent, setTaskEvent] = useState('id');
   const [addTracking, setAddTracking] = useState(false);
   const history = useHistory();
 
@@ -164,19 +171,34 @@ export default () => {
             }}
             task={task}
           >
-            <StartTrackingButton
-              onClick={() => {
-                if (!startTrackingVisible) {
+            {!pause && (
+              <StartTrackingButton
+                onClick={() => {
                   setStartTrackingVisible(true);
-                }
-              }}
-            />
-            <StopTrackingButton
-              onClick={() => {
-                setAddTracking(false);
-                localStorage.removeItem('run');
-              }}
-            />
+                  setPause(true);
+                  setTaskEvent(task.id);
+                }}
+              />
+            )}
+            {pause && TaskEvent === task.id && (
+              <PauseTrackingButton
+                onClick={() => {
+                  setPause(false);
+                  localStorage.setItem('pause', 'true');
+                }}
+              />
+            )}
+
+            {TaskEvent === task.id && (
+              <StopTrackingButton
+                onClick={() => {
+                  setAddTracking(false);
+                  localStorage.removeItem('run');
+                  setPause(false);
+                  setTaskEvent('');
+                }}
+              />
+            )}
             <EditTrackingButton onClick={() => routeChange(task.id)} />
             {startTrackingVisible && (
               <Modal

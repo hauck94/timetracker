@@ -80,11 +80,12 @@ export const PauseTrackingButton = (props: React.ButtonHTMLAttributes<HTMLButton
         width="1em"
         height="1em"
         viewBox="0 0 16 16"
-        className="bi bi-play"
+        className="bi bi-pause-fill"
+        fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         style={{ fill: '#fff', height: '24px', width: '24px' }}
       >
-        <path d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z" />
+        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z" />
       </svg>
     </StyledTrackingButton>
   );
