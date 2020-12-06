@@ -1,5 +1,5 @@
-import React, { useState, useRef, useReducer, useEffect } from "react";
-import styled from "styled-components";
+import React, { useRef, useReducer, useEffect } from 'react';
+import styled from 'styled-components';
 
 const InputLabel = styled.label`
   position: absolute;
@@ -33,7 +33,6 @@ const InputContainer = styled.div`
   transition-duration: 0.4s;
   transition-property: box-shadow, border-color;
   border: 1px solid rgb(230, 230, 230);
-
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -77,10 +76,8 @@ const DropdownItem = styled.button`
 const DropdownHolder = styled.div`
   &:focus-within > ${InputContainer} {
     border: 1px solid ${(props) => props.theme.colors.primary};
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1),
-      inset 0 0 0 2px ${(props) => props.theme.colors.primary};
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 0 0 2px ${(props) => props.theme.colors.primary};
   }
-
   &:focus-within ${Dropdown} {
     display: block;
   }
@@ -90,9 +87,7 @@ const Label = styled.div`
   border-radius: 5px;
   background-color: ${(props) => props.theme.colors.primary};
   position: relative;
-
   color: white;
-
   padding: 3px 6px;
   padding-right: 25px;
   margin: 35px 0px 13px 8px;
@@ -101,14 +96,12 @@ const Label = styled.div`
   border-image: initial;
   border-width: 0;
   outline-style: none;
-
   &:not(:empty) ~ ${InputLabel} {
     transform: matrix(0.8, 0, 0, 0.8, 0, -24.75);
   }
   &:not(:empty) ~ ${InputField} {
     padding-left: 8px;
   }
-
   &:first-child {
     margin-left: 20px;
   }
@@ -129,9 +122,6 @@ const Label = styled.div`
     background-color: teal;
     cursor: pointer;
     &:focus,
-    &:hover {
-      background-color: #d01c1f;
-    }
   }
 `;
 
@@ -147,19 +137,19 @@ export interface SelectState {
 
 export type SelectAction =
   | {
-      type: "change-input";
+      type: 'change-input';
       event: React.ChangeEvent<HTMLInputElement>;
     }
   | {
-      type: "remove-value";
+      type: 'remove-value';
       value: Option;
     }
   | {
-      type: "select-value";
+      type: 'select-value';
       value: Option;
     }
   | {
-      type: "key-down";
+      type: 'key-down';
       event: React.KeyboardEvent<HTMLInputElement>;
     };
 
@@ -168,55 +158,39 @@ const createOption = (optionValue: string): Option => {
     name: optionValue,
   };
 };
-export function initialReducer(
-    oldState: SelectState,
-    action: SelectAction
-  ): SelectState {
+export function initialReducer(oldState: SelectState, action: SelectAction): SelectState {
   switch (action.type) {
-    case "change-input":
+    case 'change-input':
       return { ...oldState, inputValue: action.event.target.value };
-    case "remove-value":
+    case 'remove-value':
       return {
         ...oldState,
-        selectedOptions: oldState.selectedOptions.filter(
-          (selectedOption) => action.value.id !== selectedOption.id
-        ),
+        selectedOptions: oldState.selectedOptions.filter((selectedOption) => action.value.id !== selectedOption.id),
       };
-    case "key-down":
-      if (
-        action.event.key === "Enter" &&
-        !oldState.selectedOptions.some(
-          (option) => option.name === oldState.inputValue
-        )
-      ) {
-        return {
-          ...oldState,
-          selectedOptions: [
-            ...oldState.selectedOptions,
-            createOption(oldState.inputValue),
-          ],
-          inputValue: "",
-        };
+    case 'key-down':
+      if (action.event.key === 'Enter') {
+        action.event.preventDefault();
+        if (!oldState.selectedOptions.some((option) => option.name === oldState.inputValue)) {
+          return {
+            ...oldState,
+            inputValue: '',
+            selectedOptions: [...oldState.selectedOptions, createOption(oldState.inputValue)],
+          };
+        }
       }
-      if (
-        action.event.key === "Backspace" &&
-        oldState.inputValue.length === 0
-      ) {
+      if (action.event.key === 'Backspace' && oldState.inputValue.length === 0) {
         action.event.preventDefault();
         return {
           ...oldState,
-          selectedOptions: oldState.selectedOptions.splice(
-            0,
-            oldState.selectedOptions.length - 1
-          ),
+          selectedOptions: oldState.selectedOptions.splice(0, oldState.selectedOptions.length - 1),
         };
       }
       return oldState;
-    case "select-value":
+    case 'select-value':
       return {
         ...oldState,
+        inputValue: '',
         selectedOptions: [...oldState.selectedOptions, action.value],
-        inputValue: "",
       };
 
     default:
@@ -224,78 +198,69 @@ export function initialReducer(
   }
 }
 
-const initialFilterOptions = (
-    options: Option[],
-    filterValue: string,
-    selectedOptions: Option[]
-  ): Option[] => {
-    return options.filter((option) =>
-        option.name.toLowerCase().includes(filterValue.toLowerCase())).filter((option) =>
-          !selectedOptions.some((selectedOption) =>
-            selectedOption.name.toLowerCase().includes(option.name.toLowerCase())
-          )
-      );
-  };
-  
-  export type LabelProps = {
-    htmlFor: string;
-    label: string;
-  };
-  
-  export const SelectInput: React.FC<{
-    label: string;
-    options: Option[];
-    reducer?: (state: SelectState, action: SelectAction) => SelectState;
-    renderLabelField?: (props: LabelProps) => React.ReactNode;
-    filterOptions?: (
-      options: Option[],
-      filterValue: string,
-      selectedOptions: Option[]
-    ) => Option[];
-    onChangeSelectedOptions?: (options: Option[]) => void;
-  }> = ({
+const initialFilterOptions = (options: Option[], filterValue: string, selectedOptions: Option[]): Option[] => {
+  return options
+    .filter((option) => option.name.toLowerCase().includes(filterValue.toLowerCase()))
+    .filter(
+      (option) =>
+        !selectedOptions.some((selectedOption) =>
+          selectedOption.name.toLowerCase().includes(option.name.toLowerCase()),
+        ),
+    );
+};
+
+export type LabelProps = {
+  htmlFor: string;
+  label: string;
+};
+const initialComponentState = {
+  inputValue: '',
+  selectedOptions: [],
+};
+
+export const SelectInput: React.FC<{
+  label: string;
+  options: Option[];
+  reducer?: (state: SelectState, action: SelectAction) => SelectState;
+  renderLabelField?: (props: LabelProps) => React.ReactNode;
+  filterOptions?: (options: Option[], filterValue: string, selectedOptions: Option[]) => Option[];
+  onChangeSelectedOptions?: (options: Option[]) => void;
+  initialState?: SelectState;
+}> = ({
   label,
   options,
   reducer = initialReducer,
   renderLabelField,
   filterOptions = initialFilterOptions,
-  onChangeSelectedOptions = () => {},
+  onChangeSelectedOptions = () => undefined,
+  initialState = initialComponentState,
 }) => {
-  const initialState = {
-    inputValue: "",
-    selectedOptions: [],
-  };
-  const [{ inputValue, selectedOptions }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ inputValue, selectedOptions }, dispatch] = useReducer(reducer, initialState);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     onChangeSelectedOptions(selectedOptions);
   }, [selectedOptions]);
 
-  const id = useRef(
-    `${label.replace(" ", "-")}-${Math.floor(Math.random() * 10000)}`
-  );
+  const id = useRef(`${label.replace(' ', '-')}-${Math.floor(Math.random() * 10000)}`);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
-    dispatch({ type: "change-input", event: e });
+    dispatch({ type: 'change-input', event: e });
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     e.persist();
-    dispatch({ type: "key-down", event: e });
+    dispatch({ type: 'key-down', event: e });
   };
 
   const removeValue = (value: Option) => {
-    dispatch({ type: "remove-value", value });
+    dispatch({ type: 'remove-value', value });
     inputRef?.current?.focus();
   };
 
   const selectValue = (value: Option) => {
-    dispatch({ type: "select-value", value });
+    dispatch({ type: 'select-value', value });
     inputRef?.current?.focus();
   };
   return (
@@ -327,9 +292,8 @@ const initialFilterOptions = (
         ) : (
           <InputLabel htmlFor={id.current}>{label}</InputLabel>
         )}
-
       </InputContainer>
-      <div style={{ marginBottom: "16px", position: "relative" }}>
+      <div style={{ marginBottom: '16px', position: 'relative' }}>
         <Dropdown>
           {filterOptions(options, inputValue, selectedOptions).map((option) => (
             <DropdownItem
