@@ -1,4 +1,4 @@
-# Backend
+# FWE-WS20-21-749219-HA1
 
 The project forms the backend for our web application.
 
@@ -7,8 +7,8 @@ The backend is used for data processing between the frontend and the database.
 
 ## Installation / Setup
 
- 1. navigate to the FWE-WS20-21-749219-HA1 folder 
- `cd FWE-WS20-21-749219-HA1`
+ 1. navigate to the main folder 
+ `cd timetracker`
  
  2. create Enviroment file 
  `cp ./packages/backend/.env.example ./packages/backend/.env`
@@ -22,7 +22,7 @@ The backend is used for data processing between the frontend and the database.
  5. synchronize database schema 
  `docker-compose exec backend npm run typeorm schema:sync`
  
- 6. (Optional) Fixtures loading 
+ 6th (Optional) Fixtures loading 
  `docker-compose exec backend npm run fixtures`
  
  7. perform automated tests 
@@ -42,10 +42,11 @@ If the project has been successfully installed, you can perform the following ac
  - All labels: localhost:4000/api/label
  - Single label: localhost:4000/api/label/:LabelID 
  - All tasks of a label: localhost:4000/api/label/tasks/:LabelID
+ - All tasks of a label: localhost:4000/api/label/tasks/:LabelID
  - All Tracking: localhost:4000/api/tracking
  - Single Tracking: localhost:4000/api/tracking/:TrackingID
 
-**POST**
+**mail**
 *Specification of the data in the body of the request*
 
  - Create Task: localhost:4000/api/task
@@ -67,7 +68,7 @@ If the project has been successfully installed, you can perform the following ac
  - Delete label: localhost:4000/api/label/:LabelID
  - Delete Tracking: localhost:4000/api/tracking/:TrackingID
 ## Tests
-The backend can be tested with the command 
+The backend can be started with the command 
 `docker-compose exec backend npm run test`
-<br /><br />
+can be tested. <br /><br />
 The following cases are covered: 
