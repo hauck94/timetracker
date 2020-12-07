@@ -1,4 +1,4 @@
-# FWE-WS20-21-749219-HA1
+# Backend
 
 The project forms the backend for our web application.
 
