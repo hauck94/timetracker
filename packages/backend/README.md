@@ -7,8 +7,8 @@ The backend is used for data processing between the frontend and the database.
 
 ## Installation / Setup
 
- 1. navigate to the FWE-WS20-21-749219-HA1 folder 
- `cd FWE-WS20-21-749219-HA1`
+ 1. navigate to the main folder 
+ `cd timetracker`
  
  2. create Enviroment file 
  `cp ./packages/backend/.env.example ./packages/backend/.env`
