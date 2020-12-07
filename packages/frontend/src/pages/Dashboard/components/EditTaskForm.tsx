@@ -5,7 +5,6 @@ import { SelectInput, Option } from '../../../components/SelectInput';
 import { labelContext } from '../../../contexts/LabelContext';
 import { Task } from './TransactionList';
 
-
 interface EditTaskFormState {
   name: string;
   description: string;
@@ -66,12 +65,13 @@ export const EditTaskForm: React.FC<{
         <SelectInput
         label="Labels"
         options={labels}
+        initialState={{ inputValue: "", selectedOptions: values.labels as Option[] }}
         onChangeSelectedOptions={(options) => {
           console.log("options change", options);
           setValues({ ...values, labels: options });
         }}
       />
-      <Button type="submit">Edit Transaction</Button>
+      <Button type="submit">Edit Task</Button>
     </form>
   );
 };

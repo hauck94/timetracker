@@ -1,4 +1,4 @@
-import { getRepository} from 'typeorm';
+import { getRepository } from 'typeorm';
 import { Task } from '../entity/task';
 import { Request, Response } from 'express';
 import { Label } from '../entity/label';
@@ -12,8 +12,13 @@ export const getTasks = async (_: Request, res: Response) => {
     });
   };
 
+function checkIfLabelExists(label : Label, labelRepoElements: Label[]) : boolean {
+  let labelExists = labelRepoElements.some(elem => elem.name === label.name);
+    return labelExists;
+}
+
 export const createTask = async (req: Request, res: Response) => {
-    const {name, description, labelIds} = req.body;
+    const {name, description, labels} = req.body;
 
     const task = new Task();
     task.name = name;
@@ -23,11 +28,28 @@ export const createTask = async (req: Request, res: Response) => {
     const taskRepository = await getRepository(Task); 
     const labelRepository = await getRepository(Label);
 
-  try{  
-    if (labelIds != undefined && labelIds.length > 0){    
-      const labels = await labelRepository.findByIds(labelIds);
-      task.labels = labels;
-    }
+  try{
+    const labelRepo = await labelRepository.find();
+
+    if (labels !== undefined && !labels.empty) {
+      labels.forEach(async (element: Label) => {
+        if(checkIfLabelExists(element, labelRepo)){  
+          labelRepo.forEach(async (label) => {
+          
+            if (label.name === element.name) {
+              task.labels.push(label);
+            }
+          });
+        } else {
+              const newLabel = new Label;
+              newLabel.name = element.name;
+              const label = await labelRepository.save(newLabel);
+              task.labels.push(label);
+            }
+      });
+          await taskRepository.save(task);
+    } 
+
     const updatedTask = await taskRepository.save(task);
     
     res.send({
@@ -73,16 +95,16 @@ export const createTask = async (req: Request, res: Response) => {
   //TODO
   export const deleteLabelOfTask = async (req: Request, res: Response) => {
     const taskId = req.params.taskId;
-    const {labelIds} = req.body;
+    const {labelNames} = req.body;
 
     const taskRepository = await getRepository(Task);
     const labelRepository = await getRepository(Label);
    
     try {
-      const labelsToRemove = await labelRepository.findByIds(labelIds);
+      const labelsToRemove = await labelRepository.findByIds(labelNames);
       const task = await taskRepository.findOneOrFail(taskId);
       
-      if (labelIds != undefined && labelIds.length > 0){   
+      if (labelNames != undefined && labelNames.length > 0){   
         
         for (let i=0; i<task.labels.length; i++) {
           for (let j=0; j<labelsToRemove.length; j++){
@@ -114,7 +136,7 @@ export const createTask = async (req: Request, res: Response) => {
 
   export const patchTask = async (req: Request, res: Response) => {
     const taskId = req.params.taskId;
-    const {name, description, labelIds} = req.body;
+    const {name, description, labelNames} = req.body;
 
     const taskRepository = await getRepository(Task);
     const labelRepository = await getRepository(Label);
@@ -125,8 +147,8 @@ export const createTask = async (req: Request, res: Response) => {
     task.description = description;
     task.labels = [];
  
-    if (labelIds != undefined && labelIds.length > 0){
-      const labels = await labelRepository.findByIds(labelIds);
+    if (labelNames != undefined && labelNames.length > 0){
+      const labels = await labelRepository.findByIds(labelNames);
       task.labels.push(... labels); 
     }
     
