@@ -72,6 +72,3 @@ The backend can be started with the command
 `docker-compose exec backend npm run test`
 can be tested. <br /><br />
 The following cases are covered: 
-
-
-Translated with www.DeepL.com/Translator (free version)
