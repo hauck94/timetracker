@@ -22,7 +22,7 @@ The backend is used for data processing between the frontend and the database.
  5. synchronize database schema 
  `docker-compose exec backend npm run typeorm schema:sync`
  
- 6th (Optional) Fixtures loading 
+ 6. (Optional) Fixtures loading 
  `docker-compose exec backend npm run fixtures`
  
  7. perform automated tests 
