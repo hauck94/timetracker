@@ -46,7 +46,7 @@ If the project has been successfully installed, you can perform the following ac
  - All Tracking: localhost:4000/api/tracking
  - Single Tracking: localhost:4000/api/tracking/:TrackingID
 
-**mail**
+**POST**
 *Specification of the data in the body of the request*
 
  - Create Task: localhost:4000/api/task
@@ -72,6 +72,3 @@ The backend can be started with the command
 `docker-compose exec backend npm run test`
 can be tested. <br /><br />
 The following cases are covered: 
-
-
-Translated with www.DeepL.com/Translator (free version)
