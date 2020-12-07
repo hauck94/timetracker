@@ -82,7 +82,6 @@ export const Timer: React.FC<{}> = () => {
     setInterval(() => setTimer(new Date()), 1000);
     return () => {
       if (!localStorage.getItem('run')) {
-        console.log('hi');
         if (lastTracking && current) {
           lastTracking.startTime = formatDuration(start.getTime());
           lastTracking.endTime = formatDuration(current.getTime());

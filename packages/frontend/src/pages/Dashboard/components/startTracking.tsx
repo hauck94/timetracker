@@ -1,9 +1,9 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Button } from '../../../components/Button';
 import { Input } from '../../../components/Input';
-import { Task, Tracking } from './TaskList';
+import { Tracking } from './TaskList';
 
-export const AddTrackingForm: React.FC<{ afterSubmit: () => void; task: Task }> = ({ afterSubmit, task }) => {
+export const AddTrackingForm: React.FC<{ afterSubmit: () => void; taskID: string }> = ({ afterSubmit, taskID }) => {
   const [values, setValues] = useState({
     description: '',
     name: '',
@@ -14,7 +14,7 @@ export const AddTrackingForm: React.FC<{ afterSubmit: () => void; task: Task }> 
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const trackingRequest = await fetch(`/api/tracking/${task.id}`, {
+    const trackingRequest = await fetch(`/api/tracking/${taskID}`, {
       body: JSON.stringify({
         ...values,
       }),

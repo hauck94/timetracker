@@ -23,9 +23,8 @@ export default () => {
   const [startTrackingVisible, setStartTrackingVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTask, setFilteredTask] = useState<Task[]>([]);
-  const [pause, setPause] = useState(false);
-  const [TaskEvent, setTaskEvent] = useState('id');
   const [addTracking, setAddTracking] = useState(false);
+  const [trackingTaskEvent, setTrackingTaskEvent] = useState('');
   const history = useHistory();
 
   const sortTrackingsByCreated = (task: Task) => {
@@ -171,34 +170,28 @@ export default () => {
             }}
             task={task}
           >
-            {!pause && (
+            {!addTracking && (
               <StartTrackingButton
                 onClick={() => {
                   setStartTrackingVisible(true);
-                  setPause(true);
-                  setTaskEvent(task.id);
+                  setTrackingTaskEvent(task.id);
                 }}
               />
             )}
-            {pause && TaskEvent === task.id && (
+            {addTracking && trackingTaskEvent === task.id && (
               <PauseTrackingButton
                 onClick={() => {
-                  setPause(false);
-                  localStorage.setItem('pause', 'true');
+                  console.log(task.name);
                 }}
               />
             )}
 
-            {TaskEvent === task.id && (
-              <StopTrackingButton
-                onClick={() => {
-                  setAddTracking(false);
-                  localStorage.removeItem('run');
-                  setPause(false);
-                  setTaskEvent('');
-                }}
-              />
-            )}
+            <StopTrackingButton
+              onClick={() => {
+                setAddTracking(false);
+                localStorage.removeItem('run');
+              }}
+            />
             <EditTrackingButton onClick={() => routeChange(task.id)} />
             {startTrackingVisible && (
               <Modal
@@ -208,7 +201,7 @@ export default () => {
                 }}
               >
                 <AddTrackingForm
-                  task={task}
+                  taskID={trackingTaskEvent}
                   afterSubmit={() => {
                     setStartTrackingVisible(false);
                     setAddTracking(true);

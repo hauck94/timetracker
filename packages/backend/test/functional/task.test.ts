@@ -43,6 +43,30 @@ describe('task', () => {
       });
   });
 
+  it('should be able to create a new Task with Label by Label Name', async (done) => {
+    await helper.resetDatabase();
+    const label = new Label();
+    label.name = 'Test Label 2';
+    const savedLabel = await helper.getRepo(Label).save(label);
+
+    request(helper.app)
+      .post('/api/task')
+      .send({
+        description: 'Test New Task Description',
+        label: [{ name: 'Test Label 1' }, { name: `${savedLabel.name}` }],
+        name: 'Test Task',
+      })
+      .set('Content-Type', 'application/json')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        expect(res.body.data.name).toBe('Test Task');
+        expect(res.body.data.description).toBe('Test New Task Description');
+        done();
+      });
+  });
+
   it('should not be able to create a new Task without name', async (done) => {
     await helper.resetDatabase();
     const label = new Label();
