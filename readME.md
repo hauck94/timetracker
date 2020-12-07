@@ -42,7 +42,6 @@ If the project has been successfully installed, you can perform the following ac
  - All labels: localhost:4000/api/label
  - Single label: localhost:4000/api/label/:LabelID 
  - All tasks of a label: localhost:4000/api/label/tasks/:LabelID
- - All tasks of a label: localhost:4000/api/label/tasks/:LabelID
  - All Tracking: localhost:4000/api/tracking
  - Single Tracking: localhost:4000/api/tracking/:TrackingID
 
@@ -68,7 +67,7 @@ If the project has been successfully installed, you can perform the following ac
  - Delete label: localhost:4000/api/label/:LabelID
  - Delete Tracking: localhost:4000/api/tracking/:TrackingID
 ## Tests
-The backend can be started with the command 
+The backend can be tested with the command 
 `docker-compose exec backend npm run test`
-can be tested. <br /><br />
+<br /><br />
 The following cases are covered: 
