@@ -95,16 +95,16 @@ export const createTask = async (req: Request, res: Response) => {
   //TODO
   export const deleteLabelOfTask = async (req: Request, res: Response) => {
     const taskId = req.params.taskId;
-    const {labelNames} = req.body;
+    const {labels} = req.body;
 
     const taskRepository = await getRepository(Task);
     const labelRepository = await getRepository(Label);
    
     try {
-      const labelsToRemove = await labelRepository.findByIds(labelNames);
+      const labelsToRemove = await labelRepository.findByIds(labels);
       const task = await taskRepository.findOneOrFail(taskId);
       
-      if (labelNames != undefined && labelNames.length > 0){   
+      if (labels != undefined && labels.length > 0){   
         
         for (let i=0; i<task.labels.length; i++) {
           for (let j=0; j<labelsToRemove.length; j++){
@@ -122,10 +122,10 @@ export const createTask = async (req: Request, res: Response) => {
           }
         }
       }
-      const updatedTask = await taskRepository.save(task);
+      const createdTask = await taskRepository.save(task);
 
       res.send({
-        data:updatedTask,
+        data:createdTask,
         });
     } catch (e) {
       res.status(404).send({
@@ -136,7 +136,7 @@ export const createTask = async (req: Request, res: Response) => {
 
   export const patchTask = async (req: Request, res: Response) => {
     const taskId = req.params.taskId;
-    const {name, description, labelNames} = req.body;
+    const {name, description, labels} = req.body;
 
     const taskRepository = await getRepository(Task);
     const labelRepository = await getRepository(Label);
@@ -147,16 +147,33 @@ export const createTask = async (req: Request, res: Response) => {
     task.description = description;
     task.labels = [];
  
-    if (labelNames != undefined && labelNames.length > 0){
-      const labels = await labelRepository.findByIds(labelNames);
-      task.labels.push(... labels); 
-    }
-    
-    task = await taskRepository.save(task);
+    const labelRepo = await labelRepository.find();
+  
+      if (labels !== undefined && !labels.empty) {
+        labels.forEach(async (element: Label) => {
+          if(checkIfLabelExists(element, labelRepo)){  
+            labelRepo.forEach(async (label) => {
+            
+              if (label.name === element.name) {
+                task.labels.push(label);
+              }
+            });
+          } else {
+                const newLabel = new Label;
+                newLabel.name = element.name;
+                const label = await labelRepository.save(newLabel);
+                task.labels.push(label);
+              }
+        });
+            await taskRepository.save(task);
+      }
+      
+      const updatedTask = await taskRepository.save(task);
 
-    res.send({
-      data:task,
-    });
+      res.send({
+        data:updatedTask,
+      });
+      
     
     } catch (e) {
       res.status(404).send({

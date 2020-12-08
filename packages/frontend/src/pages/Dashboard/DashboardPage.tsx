@@ -4,7 +4,7 @@ import { AddButton} from "./components/AddButton";
 import { Task, TaskItem, TaskList } from "./components/TransactionList";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { Modal } from "../../components/Modal";
-import {SelectInput, SelectAction, SelectState, LabelProps, initialReducer, } from "../../components/SelectInput";
+//import {SelectInput, SelectAction, SelectState, LabelProps, initialReducer, } from "../../components/SelectInput";
 import { EditTaskForm } from "./components/EditTaskForm";
 
 
