@@ -122,6 +122,9 @@ const Label = styled.div`
     background-color: teal;
     cursor: pointer;
     &:focus,
+    &:hover {
+      background-color: ${(props) => props.theme.colors.danger};
+    }
   }
 `;
 

@@ -20,8 +20,6 @@ export const Button = styled.button`
   }
 `;
 
-/*
 export const DangerButton = styled(Button)`
   background-color: ${(props) => props.theme.colors.danger};
 `;
-*/

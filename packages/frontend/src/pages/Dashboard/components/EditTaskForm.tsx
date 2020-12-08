@@ -1,5 +1,5 @@
 import React, { useContext, useState, ChangeEvent } from 'react';
-import { Button } from '../../../components/Button';
+import { Button, DangerButton } from '../../../components/Button';
 import { Input } from '../../../components/Input';
 import { SelectInput, Option } from '../../../components/SelectInput';
 import { labelContext } from '../../../contexts/LabelContext';
@@ -41,9 +41,9 @@ export const EditTaskForm: React.FC<{
   const deleteTask = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await fetch(`/api/task/${task.id}`, {
-      headers: { 'Content-Type': 'application/json' },
       method: 'DELETE',
-    });
+      headers: { 'Content-Type': 'application/json' },
+      });
     afterSubmit();
   };
   return (
@@ -72,6 +72,9 @@ export const EditTaskForm: React.FC<{
         }}
       />
       <Button type="submit">Edit Task</Button>
+      <DangerButton onClick={deleteTask}>
+        Delete Transaction
+      </DangerButton>
     </form>
   );
 };
