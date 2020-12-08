@@ -7,6 +7,7 @@ export const AddTrackingForm: React.FC<{ afterSubmit: () => void; taskID: string
   const [values, setValues] = useState({
     description: '',
     name: '',
+    startTime: new Date(new Date().getTime() + 3600000).toISOString().slice(11, 19),
   });
   const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -24,6 +25,9 @@ export const AddTrackingForm: React.FC<{ afterSubmit: () => void; taskID: string
     if (trackingRequest.status === 200) {
       const trackingJSON = await trackingRequest.json();
       const tracking: Tracking = trackingJSON.data;
+      console.log(new Date(new Date().getTime() + 3600000).toISOString().slice(11, 19));
+
+      console.log(tracking);
       if (tracking) {
         localStorage.setItem('lastTracking', tracking?.id);
       }

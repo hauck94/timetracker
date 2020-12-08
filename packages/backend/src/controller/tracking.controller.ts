@@ -12,7 +12,7 @@ export const getTrackings = async (_: Request, res: Response) => {
 };
 
 export const createTracking = async (req: Request, res: Response) => {
-  const { name, description } = req.body;
+  const { name, description, startTime } = req.body;
   const taskId = req.params.taskId;
   const taskRepository = await getRepository(Task);
   const trackingRepository = await getRepository(Tracking);
@@ -22,6 +22,7 @@ export const createTracking = async (req: Request, res: Response) => {
     const tracking = new Tracking();
     tracking.name = name;
     tracking.description = description;
+    tracking.startTime = startTime;
     tracking.task = task;
     const createdTracking = await trackingRepository.save(tracking);
     res.send({

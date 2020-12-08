@@ -13,7 +13,7 @@ import { AddTaskForm } from './components/AddTaskForm';
 import { EditTaskForm } from './components/EditTaskForm';
 import { AddTrackingForm } from './components/startTracking';
 import { Task, TaskItem, TaskList } from './components/TaskList';
-import { Timer } from './components/Timer';
+import { TimerContainer, TimerDescription, TimerTitle } from './components/Timer';
 import { Input } from '../../components/Input';
 import { FilterPanel } from './components/FilterPanel';
 
@@ -23,9 +23,57 @@ export default () => {
   const [startTrackingVisible, setStartTrackingVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTask, setFilteredTask] = useState<Task[]>([]);
-  const [addTracking, setAddTracking] = useState(false);
   const [trackingTaskEvent, setTrackingTaskEvent] = useState('');
   const history = useHistory();
+  // Timer
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(localStorage.getItem('time') === null || '0' ? false : true);
+
+  useEffect(() => {
+    if (isRunning) {
+      if (localStorage.getItem('time') === null || '0') {
+        const actualTime = new Date().getTime().toString();
+        localStorage.setItem('time', actualTime);
+      } else {
+        const now = new Date().getTime();
+        const past = Number(localStorage.getItem('time'));
+        const duration = now - past;
+        setSeconds(duration / 1000);
+      }
+      const id = setInterval(() => {
+        setSeconds((s) => s + 1);
+      }, 1000);
+
+      return () => clearInterval(id);
+    }
+    return undefined;
+  }, [isRunning]);
+
+  const fetchTracking = async () => {
+    const trackingRequest = await fetch(`/api/tracking/${localStorage.getItem('lastTracking')}`, {
+      headers: { 'content-type': 'application/json' },
+    });
+    if (trackingRequest.status === 200) {
+      const trackingJSON = await trackingRequest.json();
+      const past = Number(localStorage.getItem('time'));
+
+      await fetch(`/api/tracking/${trackingJSON.data.id}`, {
+        body: JSON.stringify({
+          created: trackingJSON.data.created,
+          description: trackingJSON.data.description,
+          // endtime is duration + start time + 1h winter time - 2 seconds delay
+          endTime: new Date((seconds + 3600 - 2) * 1000 + past).toISOString().substr(11, 8),
+          name: trackingJSON.data.name,
+          startTime: trackingJSON.data.startTime,
+          updatedAt: trackingJSON.data.updatedAt,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PATCH',
+      });
+    }
+  };
+
+  // Timer End
 
   const sortTrackingsByCreated = (task: Task) => {
     task.trackings.sort((a, b) => {
@@ -170,26 +218,31 @@ export default () => {
             }}
             task={task}
           >
-            {!addTracking && (
-              <StartTrackingButton
-                onClick={() => {
-                  setStartTrackingVisible(true);
-                  setTrackingTaskEvent(task.id);
-                }}
-              />
-            )}
-            {addTracking && trackingTaskEvent === task.id && (
+            {isRunning ? (
               <PauseTrackingButton
                 onClick={() => {
-                  console.log(task.name);
+                  setIsRunning(false);
+                }}
+              />
+            ) : (
+              <StartTrackingButton
+                onClick={() => {
+                  if (seconds < 1) {
+                    setStartTrackingVisible(true);
+                    setTrackingTaskEvent(task.id);
+                  } else {
+                    setIsRunning(true);
+                  }
                 }}
               />
             )}
 
             <StopTrackingButton
-              onClick={() => {
-                setAddTracking(false);
-                localStorage.removeItem('run');
+              onClick={async () => {
+                setIsRunning(false);
+                await fetchTracking();
+                setSeconds(0);
+                localStorage.setItem('time', '0');
               }}
             />
             <EditTrackingButton onClick={() => routeChange(task.id)} />
@@ -203,8 +256,8 @@ export default () => {
                 <AddTrackingForm
                   taskID={trackingTaskEvent}
                   afterSubmit={() => {
+                    setIsRunning(true);
                     setStartTrackingVisible(false);
-                    setAddTracking(true);
                     fetchTasks();
                   }}
                 />
@@ -213,8 +266,10 @@ export default () => {
           </TaskItem>
         ))}
       </TaskList>
-
-      {(addTracking || localStorage.getItem('run') === 'true') && <Timer />}
+      <TimerContainer>
+        <TimerTitle>Tacking: </TimerTitle>
+        <TimerDescription>time elapsed: {new Date(seconds * 1000).toISOString().substr(11, 8)}</TimerDescription>
+      </TimerContainer>
     </Layout>
   );
 };
