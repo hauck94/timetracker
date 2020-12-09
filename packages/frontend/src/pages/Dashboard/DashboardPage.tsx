@@ -26,12 +26,23 @@ export default () => {
   const [trackingTaskEvent, setTrackingTaskEvent] = useState('');
   const history = useHistory();
   // Timer
-  const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(localStorage.getItem('time') === null || '0' ? false : true);
+  functionality  const [seconds, setSeconds] = useState(
+    localStorage.getItem('pause') === 'true' ? (new Date().getTime() - Number(localStorage.getItem('time'))) / 1000 : 0,
+  );
+  const [isRunning, setIsRunning] = useState(
+    localStorage.getItem('time') === null ||
+      localStorage.getItem('time') === '0' ||
+      localStorage.getItem('pause') === 'true'
+      ? false
+      : true,
+  );
+  const [isPause, setIsPause] = useState(localStorage.getItem('pause') === 'true' ? true : false);
 
   useEffect(() => {
+    console.log(isRunning);
+
     if (isRunning) {
-      if (localStorage.getItem('time') === null || '0') {
+      if (localStorage.getItem('time') === null || localStorage.getItem('time') === '0') {
         const actualTime = new Date().getTime().toString();
         localStorage.setItem('time', actualTime);
       } else {
@@ -220,8 +231,11 @@ export default () => {
           >
             {isRunning ? (
               <PauseTrackingButton
-                onClick={() => {
+                onClick={async () => {
                   setIsRunning(false);
+                  await fetchTracking();
+                  localStorage.setItem('pause', 'true');
+                  setIsPause(true);
                 }}
               />
             ) : (
@@ -231,8 +245,12 @@ export default () => {
                     setStartTrackingVisible(true);
                     setTrackingTaskEvent(task.id);
                   } else {
-                    setIsRunning(true);
+                    setStartTrackingVisible(true);
+                    setTrackingTaskEvent(task.id);
+                    localStorage.setItem('time', new Date().getTime().toString());
                   }
+                  localStorage.removeItem('pause');
+                  setIsPause(false);
                 }}
               />
             )}
@@ -243,6 +261,8 @@ export default () => {
                 await fetchTracking();
                 setSeconds(0);
                 localStorage.setItem('time', '0');
+                localStorage.removeItem('pause');
+                setIsPause(false);
               }}
             />
             <EditTrackingButton onClick={() => routeChange(task.id)} />
@@ -266,10 +286,12 @@ export default () => {
           </TaskItem>
         ))}
       </TaskList>
-      <TimerContainer>
-        <TimerTitle>Tacking: </TimerTitle>
-        <TimerDescription>time elapsed: {new Date(seconds * 1000).toISOString().substr(11, 8)}</TimerDescription>
-      </TimerContainer>
+      {localStorage.getItem('time') !== '0' && localStorage.getItem('time') !== null && (
+        <TimerContainer>
+          {isPause && <TimerTitle>Paused Tracking</TimerTitle>}
+          <TimerDescription>time elapsed: {new Date(seconds * 1000).toISOString().substr(11, 8)}</TimerDescription>
+        </TimerContainer>
+      )}
     </Layout>
   );
 };

@@ -28,7 +28,7 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit
       method: 'POST',
     });
     console.log(JSON.stringify(labels));
-    
+
     await refetchLabels();
     afterSubmit();
   };
