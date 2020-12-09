@@ -26,7 +26,7 @@ export default () => {
   const [trackingTaskEvent, setTrackingTaskEvent] = useState('');
   const history = useHistory();
   // Timer
-  functionality  const [seconds, setSeconds] = useState(
+  const [seconds, setSeconds] = useState(
     localStorage.getItem('pause') === 'true' ? (new Date().getTime() - Number(localStorage.getItem('time'))) / 1000 : 0,
   );
   const [isRunning, setIsRunning] = useState(
