@@ -258,7 +258,9 @@ export default () => {
             <StopTrackingButton
               onClick={async () => {
                 setIsRunning(false);
-                await fetchTracking();
+                if (localStorage.getItem('pause') === 'true') {
+                  await fetchTracking();
+                }
                 setSeconds(0);
                 localStorage.setItem('time', '0');
                 localStorage.removeItem('pause');
@@ -268,7 +270,7 @@ export default () => {
             <EditTrackingButton onClick={() => routeChange(task.id)} />
             {startTrackingVisible && (
               <Modal
-                title="Start Tracking"
+                title={localStorage.getItem('time') === '0' ? 'Start Tracking' : 'Continue Tracking'}
                 onCancel={() => {
                   setStartTrackingVisible(false);
                 }}
