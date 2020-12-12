@@ -1,6 +1,6 @@
 import React, { useContext, useState, ChangeEvent } from 'react';
-import { Button, DangerButton } from '../../../components/Button';
-import { Input } from '../../../components/Input';
+import { Button, DangerButton } from '../../../components/button/Button';
+import { Input } from '../../../components/input/Input';
 import { SelectInput, Option } from '../../../components/SelectInput';
 import { labelContext } from '../../../contexts/LabelContext';
 import { Task } from './TaskList';
@@ -67,8 +67,8 @@ export const EditTaskForm: React.FC<{
           setValues({ ...values, labels: options });
         }}
       />
-      <Button type="submit">Edit Task</Button>
-      <DangerButton onClick={deleteTask}>Delete Task</DangerButton>
+      <Button type="submit" data-testid="submit-task-edit">Edit Task</Button>
+      <DangerButton onClick={deleteTask} data-testid="delete-task-edit">Delete Task</DangerButton>
     </form>
   );
 };

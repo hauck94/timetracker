@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Button, DangerButton } from '../../../components/Button';
-import { Input } from '../../../components/Input';
+import { Button, DangerButton } from '../../../components/button/Button';
+import { Input } from '../../../components/input/Input';
 import { Tracking } from '../../Dashboard/components/TaskList';
 
 interface EditTrackingFormState {

@@ -1,6 +1,6 @@
 import React, { useContext, useState, ChangeEvent } from 'react';
-import { Button } from '../../../components/Button';
-import { Input } from '../../../components/Input';
+import { Button } from '../../../components/button/Button';
+import { Input } from '../../../components/input/Input';
 import { SelectInput, Option } from '../../../components/SelectInput';
 import { labelContext } from '../../../contexts/LabelContext';
 
@@ -34,7 +34,14 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit
   };
   return (
     <form onSubmit={onSubmitForm}>
-      <Input name="name" type="text" label="Name" onChange={fieldDidChange} required={true} value={values.name} />
+      <Input
+        name="name"
+        type="text"
+        label="Name"
+        onChange={fieldDidChange}
+        required={true}
+        value={values.name}
+      />
       <Input
         name="description"
         label="Description"
@@ -51,7 +58,7 @@ export const AddTaskForm: React.FC<{ afterSubmit: () => void }> = ({ afterSubmit
           setLabels(options);
         }}
       />
-      <Button type="submit">Add Task</Button>
+      <Button type="submit" data-testid="submit-task-form">Add Task</Button> 
     </form>
   );
 };

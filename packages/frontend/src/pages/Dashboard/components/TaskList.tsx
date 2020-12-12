@@ -148,7 +148,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ children, task, onClick = ()
   const { name, description, labels, trackings } = task;
   return (
     <TaskItemWrapper>
-      <TaskItemStyle
+      <TaskItemStyle data-testid="task-item"
         onClick={() => {
           onClick(task);
         }}
@@ -156,7 +156,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ children, task, onClick = ()
         <TaskHighlight />
         <TaskFlex>
           <div>
-            <TaskTitle>{name}</TaskTitle>
+            <TaskTitle data-testid="task-item-name">{name}</TaskTitle>
             <TaskDescription>{description}</TaskDescription>
           </div>
           <LabelList>
