@@ -36,7 +36,7 @@ export const AddTrackingForm: React.FC<{ afterSubmit: () => void; taskID: string
   };
 
   return (
-    <form onSubmit={onSubmitForm}>
+    <form onSubmit={onSubmitForm} data-testid="submit-tracking-form">
       <Input name="name" type="text" label="Name" onChange={fieldDidChange} required={true} value={values.name} />
       <Input
         name="description"

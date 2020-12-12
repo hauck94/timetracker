@@ -18,3 +18,5 @@ Sync database schema
 
 Start Tests
 - `docker-compose exec backend npm run test`
+- `cd .\packages\cypress\`
+- `npx cypress open`

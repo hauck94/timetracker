@@ -67,8 +67,12 @@ export const EditTaskForm: React.FC<{
           setValues({ ...values, labels: options });
         }}
       />
-      <Button type="submit" data-testid="submit-task-edit">Edit Task</Button>
-      <DangerButton onClick={deleteTask} data-testid="delete-task-edit">Delete Task</DangerButton>
+      <Button type="submit" data-testid="submit-task-edit">
+        Edit Task
+      </Button>
+      <DangerButton onClick={deleteTask} data-testid="delete-task-edit">
+        Delete Task
+      </DangerButton>
     </form>
   );
 };

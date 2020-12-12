@@ -128,13 +128,13 @@ export default () => {
     switch (type) {
       case 'name':
         const filteredByName = tasks.filter((task) => {
-          return task.name.toLocaleLowerCase().indexOf(input) !== -1;
+          return task.name.toLocaleLowerCase().indexOf(input.toLocaleLowerCase()) !== -1;
         });
         setFilteredTask(filteredByName);
         break;
       case 'description':
         const filteredByDescription = tasks.filter((task) => {
-          return task.description.toLocaleLowerCase().indexOf(input) !== -1;
+          return task.description.toLocaleLowerCase().indexOf(input.toLocaleLowerCase()) !== -1;
         });
         setFilteredTask(filteredByDescription);
         break;
@@ -142,7 +142,7 @@ export default () => {
         let filterByLabel: Task[] = [];
         tasks.forEach((task) => {
           task.labels.filter((label) => {
-            if (label.name.toLocaleLowerCase().indexOf(input) !== -1) {
+            if (label.name.toLocaleLowerCase().indexOf(input.toLocaleLowerCase()) !== -1) {
               filterByLabel.push(task);
             }
           });
@@ -180,16 +180,32 @@ export default () => {
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"
-              />
+              <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z" />
             </svg>
-            <Input name="name" type="text" label="Task Name" onChange={fieldDidChange} />
-            <Input name="description" type="text" label="Task Description" onChange={fieldDidChange} />
-            <Input name="label" type="text" label="Label Name" onChange={fieldDidChange} />
+            <Input
+              name="name"
+              type="text"
+              label="Task Name"
+              onChange={fieldDidChange}
+              data-testid="filter-name-button"
+            />
+            <Input
+              name="description"
+              type="text"
+              label="Task Description"
+              onChange={fieldDidChange}
+              data-testid="filter-description-button"
+            />
+            <Input
+              name="label"
+              type="text"
+              label="Label Name"
+              onChange={fieldDidChange}
+              data-testid="filter-label-button"
+            />
           </FilterPanel>
           <AddButton
-          data-testid="add-task-button"
+            data-testid="add-task-button"
             onClick={() => {
               if (!editTask) {
                 setAddTaskVisible(true);
@@ -243,6 +259,7 @@ export default () => {
           >
             {isRunning ? (
               <PauseTrackingButton
+                data-testid="task-tracking-pause"
                 onClick={async () => {
                   setIsRunning(false);
                   await fetchTracking();
@@ -252,6 +269,7 @@ export default () => {
               />
             ) : (
               <StartTrackingButton
+                data-testid="task-tracking-start"
                 onClick={() => {
                   if (seconds < 1) {
                     setStartTrackingVisible(true);
@@ -268,6 +286,7 @@ export default () => {
             )}
 
             <StopTrackingButton
+              data-testid="task-tracking-stop"
               onClick={async () => {
                 setIsRunning(false);
                 if (localStorage.getItem('pause') === 'true' || localStorage.getItem('pause') === null) {

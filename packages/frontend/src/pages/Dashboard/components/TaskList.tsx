@@ -148,7 +148,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({ children, task, onClick = ()
   const { name, description, labels, trackings } = task;
   return (
     <TaskItemWrapper>
-      <TaskItemStyle data-testid="task-item"
+      <TaskItemStyle
+        data-testid="task-item"
         onClick={() => {
           onClick(task);
         }}
@@ -165,7 +166,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ children, task, onClick = ()
                 return <li key={label.id}>{label.name}</li>;
               })}
           </LabelList>
-          <TrackingList>
+          <TrackingList data-testid="task-item-tracking">
             {trackings &&
               trackings.map((tracking: Tracking) => {
                 return <li key={tracking.id}>{tracking.name}</li>;
