@@ -37,7 +37,9 @@ export const AddTrackingForm: React.FC<{
         required={true}
         value={values.description}
       />
-      <Button type="submit">Add Tracking</Button>
+      <Button type="submit" data-testid="submit-add-tracking">
+        Add Tracking
+      </Button>
     </form>
   );
 };

@@ -72,7 +72,7 @@ export const EditTrackingForm: React.FC<{
       />
       <Input
         name="startTime"
-        label="Started At"
+        label="StartedAt"
         type="text"
         onChange={fieldDidChange}
         required={true}
@@ -80,15 +80,19 @@ export const EditTrackingForm: React.FC<{
       />
       <Input
         name="endTime"
-        label="Ended At"
+        label="EndedAt"
         type="text"
         onChange={fieldDidChange}
         required={true}
         value={values.endTime || ''}
       />
 
-      <Button type="submit">Edit Tracking</Button>
-      <DangerButton onClick={deleteTracking}>Delete Tracking</DangerButton>
+      <Button type="submit" data-testid="submit-tracking-form">
+        Edit Tracking
+      </Button>
+      <DangerButton onClick={deleteTracking} data-testid="delete-tracking-form">
+        Delete Tracking
+      </DangerButton>
     </form>
   );
 };

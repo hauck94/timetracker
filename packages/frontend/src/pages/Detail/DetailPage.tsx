@@ -45,6 +45,7 @@ export default () => {
           <h1>{task?.name}</h1>
           <h3>{task?.trackings.length} Trackings</h3>
           <AddButton
+            data-testid="add-tracking-button"
             onClick={() => {
               if (!editTracking) {
                 setAddTrackingVisible(true);

@@ -298,7 +298,7 @@ export default () => {
                 setIsPause(false);
               }}
             />
-            <EditTrackingButton onClick={() => routeChange(task.id)} />
+            <EditTrackingButton data-testid="task-tracking-edit" onClick={() => routeChange(task.id)} />
             {startTrackingVisible && (
               <Modal
                 title={localStorage.getItem('time') === '0' ? 'Start Tracking' : 'Continue Tracking'}

@@ -90,6 +90,7 @@ export const TrackingItem: React.FC<TrackingItemProps> = ({ tracking, onClick = 
 
   return (
     <TrackingItemStyle
+      data-testid="tracking-item"
       onClick={() => {
         onClick(tracking);
       }}
@@ -97,7 +98,7 @@ export const TrackingItem: React.FC<TrackingItemProps> = ({ tracking, onClick = 
       <TrackingHighlight />
       <TrackingFlex>
         <TrackingPropertyWrapper>
-          <TrackingTitle>{name}</TrackingTitle>
+          <TrackingTitle data-testid="tracking-item-name">{name}</TrackingTitle>
           <TrackingDescription>description: {description}</TrackingDescription>
         </TrackingPropertyWrapper>
         <TrackingPropertyWrapper>
@@ -105,8 +106,8 @@ export const TrackingItem: React.FC<TrackingItemProps> = ({ tracking, onClick = 
           <TrackingDescription>updated: {updatedAt}</TrackingDescription>
         </TrackingPropertyWrapper>
         <TrackingPropertyWrapper>
-          <TrackingDescription>started: {startTime}</TrackingDescription>
-          <TrackingDescription>ended: {endTime}</TrackingDescription>
+          <TrackingDescription data-testid="tracking-item-started">started: {startTime}</TrackingDescription>
+          <TrackingDescription data-testid="tracking-item-ended">ended: {endTime}</TrackingDescription>
         </TrackingPropertyWrapper>
       </TrackingFlex>
     </TrackingItemStyle>
