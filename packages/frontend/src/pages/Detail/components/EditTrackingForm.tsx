@@ -4,30 +4,31 @@ import { Input } from '../../../components/Input';
 import { StyledLink } from '../../../components/Link';
 import { SelectInput, Option } from '../../../components/SelectInput';
 import { labelContext } from '../../../contexts/LabelContext';
-import { Task } from './TransactionList';
+import { Tracking } from '../../Dashboard/components/TransactionList';
+import { Task } from './TrackingList';
 
-interface EditTaskFormState {
+interface EditTrackingFormState {
   name: string;
   description: string;
   labels: Option[];
 }
 
-export const EditTaskForm: React.FC<{
+export const EditTrackingForm: React.FC<{
   afterSubmit: () => void;
-  task: Task;
-}> = ({ afterSubmit, task }) => {
+  tracking: Tracking;
+}> = ({ afterSubmit, tracking }) => {
   const {
     labels,
     actions: { refetch: refetchLabels },
   } = useContext(labelContext);
-  const [values, setValues] = useState<EditTaskFormState | Task>(task); // Workaround -> vorher: useState<EditTaskFormState>(task)
+  const [values, setValues] = useState<EditTrackingFormState | Tracking>(tracking); // Workaround -> vorher: useState<EditTaskFormState>(task)
   const fieldDidChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await fetch(`/api/task/${task.id}`, {
+    await fetch(`/api/tracking/${tracking.id}`, {
       body: JSON.stringify({
         ...values,
       }),
@@ -41,7 +42,7 @@ export const EditTaskForm: React.FC<{
 
   const deleteTask = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    await fetch(`/api/task/${task.id}`, {
+    await fetch(`/api/tracking/${tracking.id}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       });
@@ -63,18 +64,9 @@ export const EditTaskForm: React.FC<{
           onChange={fieldDidChange}
           required
         />
-        <SelectInput
-        label="Labels"
-        options={labels}
-        initialState={{ inputValue: "", selectedOptions: values.labels as Option[] }}
-        onChangeSelectedOptions={(options) => {
-          console.log("options change", options);
-          setValues({ ...values, labels: options });
-        }}
-      />
       <Button type="submit">Edit Task</Button>
       <DangerButton onClick={deleteTask}>Delete Transaction</DangerButton>
-      <StyledLink to ="/tracking">Tracking</StyledLink>
+      <StyledLink to ="/task">Tracking</StyledLink>
     </form>
   );
 };

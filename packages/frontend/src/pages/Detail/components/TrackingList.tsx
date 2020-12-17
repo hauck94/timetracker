@@ -1,5 +1,26 @@
 import React from "react";
 import styled from "styled-components";
+//import {Task, Tracking} from "../components/TrackingList";
+
+// Labellist ursprünglich
+/*
+export const TrackingList = styled.ul`
+  list-style: none;
+  flex-grow: 1;
+  font-size: 0.8rem;
+
+  align-self: flex-end;
+  display: flex;
+  & > li {
+    margin-right: 0.5rem;
+    padding: 0.125rem;
+    border-radius: 0.25rem;
+    background-color: ${(props : any) => props.theme.colors.primary};
+    display: block;
+    color: #333;
+  }
+`;
+*/
 
 export type Task = {
   id: string;
@@ -30,29 +51,12 @@ export type Tracking = {
   task: Task;
 };
 
-const LabelList = styled.ul`
-  list-style: none;
-  flex-grow: 1;
-  font-size: 0.8rem;
-
-  align-self: flex-end;
-  display: flex;
-  & > li {
-    margin-right: 0.5rem;
-    padding: 0.125rem;
-    border-radius: 0.25rem;
-    background-color: ${(props : any) => props.theme.colors.primary};
-    display: block;
-    color: #333;
-  }
-`;
-
-const TaskFlex = styled.div`
+const TrackingFlex = styled.div`
   display: flex;
   align-items: center;
 `;
 
-export const TaskHighlight = styled.span`
+export const TrackingHighlight = styled.span`
   position: absolute;
   top: 0;
   left: 0;
@@ -62,25 +66,27 @@ export const TaskHighlight = styled.span`
   background-color: ${(props : any) => props.theme.colors.primary};
 `;
 
-export const TaskItemStyle = styled.div`
+export const TrackingItemStyle = styled.div`
   margin: 0;
   min-height: 3rem;
   position: relative;
   padding: 0.7rem 2rem;
   &:hover {
-    ${TaskHighlight} {
+    ${TrackingHighlight} {
       display: block;
     }
   }
 `;
-export const TaskList = styled.ul`
+
+//das wird evtl. TrackingList
+export const TrackingList = styled.ul`
   list-style: none;
   box-shadow: 0 0.125em 0.25em 0 ${(props : any) => props.theme.colors.shadowColor};
   width: 100%;
   padding: 0;
   border-radius: 0.5rem;
   background-color: ${(props : any) => props.theme.colors.listBackgroundColor};
-  ${TaskItemStyle} {
+  ${TrackingItemStyle} {
     border-bottom: 1px ${(props: any) => props.theme.colors.shadowColor} solid;
     &:last-of-type {
       border-bottom: 0;
@@ -88,66 +94,54 @@ export const TaskList = styled.ul`
   }
 `;
 
-export const TaskTitle = styled.p`
+export const TrackingTitle = styled.p`
   font-size: 1.1rem;
   font-weight: 500;
   margin: 0;
 `;
 
-export const TaskDescription = styled.p`
+export const TrackingDescription = styled.p`
   font-size: 0.8rem;
   margin: 0;
 `;
-export const TaskDate = styled.p`
+
+export const TrackingDate = styled.p`
   margin: 0;
   font-size: 0.8rem;
   color: ${(props : any) => props.theme.colors.secondaryFontColor};
 `;
-export const TaskValue = styled.span`
-  white-space: nowrap;
-`;
 
-export const TaskWrapper = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-`;
-
-export type TaskItemProps = {
-  task: Task;
-  onClick?: (task: Task) => void;
+export type TrackingItemProps = {
+  tracking: Tracking;
+  onClick?: (tracking: Tracking) => void;
 };
 
-export const TaskItem: React.FC<TaskItemProps> = ({
-  task,
+export const TrackingItem: React.FC<TrackingItemProps> = ({
+  tracking,
   children,
   onClick = () => {},
 }) => {
-  const { name, description, created, labels } = task;
+  const { name, description, created, updatedAt } = tracking;
   return (
-    <TaskItemStyle
+    <TrackingItemStyle
     onClick={() => {
-      console.log("clicked transaction");
-      onClick(task);
+      onClick(tracking);
     }}
   >
-      <TaskHighlight />
-      <TaskFlex>
+      <TrackingHighlight />
+      <TrackingFlex>
         <div>
-          <TaskTitle>{name}</TaskTitle>
-          <TaskDescription>{description}</TaskDescription>
-          <TaskDate>
+          <TrackingTitle>{name}</TrackingTitle>
+          <TrackingDescription>{description}</TrackingDescription>
+          <TrackingDate>
             {created && created.toLocaleString()}
-          </TaskDate>
+          </TrackingDate>
         </div>
-        <LabelList>
-          {labels &&
-            labels.map((label: Label) => {
-              return <li key= {label.id}>{label.name}</li>;
-            })}
-        </LabelList>
+        <TrackingList>
+              <li key= {tracking.id}>{tracking.name}</li>;
+        </TrackingList>
         {children}
-      </TaskFlex>
-    </TaskItemStyle>
+      </TrackingFlex>
+    </TrackingItemStyle>
   );
 };

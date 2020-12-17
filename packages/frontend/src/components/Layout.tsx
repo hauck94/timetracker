@@ -1,4 +1,5 @@
 import React from "react";
+import { StyledLink } from "../components/Link";
 import styled, { css } from "styled-components/macro";
 import { LabelProvider } from "../contexts/LabelContext";
 
@@ -47,21 +48,24 @@ export const Layout: React.FC = ({ children }) => {
             flex: 1;
           `}
         >
+         
           <span
             css={`
               text-decoration: underline overline;
             `}
           >
-            AWD
+            <StyledLink to = "/">
+            Timetracker
+            </StyledLink> 
           </span>
-          20
+          
         </div>
         <NavigationList>
           <NavigationItem>Home</NavigationItem>
         </NavigationList>
       </Header>
       <Main>{children}</Main>
-      <Footer>© 2020 AWD Lecture</Footer>
+      <Footer>© 2020 TE</Footer>
       </LabelProvider>
   );
 };

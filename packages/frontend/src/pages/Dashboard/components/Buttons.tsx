@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
+//import { Button } from "../../../components/Button";
+
 
 export const AddButton = (
   props: React.ButtonHTMLAttributes<HTMLButtonElement>
@@ -28,3 +31,21 @@ export const AddButton = (
     </StyledButton>
   );
 };
+
+export const ShowTrackingButton = (
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>
+) => {
+  const StyledButton = styled.button`
+    width: 70px;
+    border: none;
+    border-radius: 4px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${(props) => props.theme.colors.primary};
+  `;
+  return (
+    <StyledButton {...props}>Show Tracking</StyledButton>
+    );
+}

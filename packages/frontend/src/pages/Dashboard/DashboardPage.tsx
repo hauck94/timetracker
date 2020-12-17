@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Layout } from "../../components/Layout";
-import { AddButton} from "./components/AddButton";
-import { Task, TaskItem, TaskList } from "./components/TransactionList";
+import { AddButton, ShowTrackingButton } from "./components/Buttons";
+import { Task, TaskItem, TaskList, TaskWrapper } from "./components/TransactionList";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { Modal } from "../../components/Modal";
 //import {SelectInput, SelectAction, SelectState, LabelProps, initialReducer, } from "../../components/SelectInput";
 import { EditTaskForm } from "./components/EditTaskForm";
+import { useHistory } from 'react-router-dom';
 
 
 export const DashboardPage =  () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [addTaskVisible, setAddTaskVisible] = useState(false);
-  const [editTask, setEditTask] = useState<Task | null>(
-    null
-  );
+  const [editTask, setEditTask] = useState<Task | null>(null);
 
+  const history = useHistory();
 
   const fetchTasks = async () => {
     const taskRequest = await fetch("/api/task", {
@@ -27,7 +27,7 @@ export const DashboardPage =  () => {
     }
   };
 
-  useEffect(() => {
+   useEffect(() => {
     fetchTasks();
   }, []);
 
@@ -70,7 +70,7 @@ export const DashboardPage =  () => {
       )}
       {editTask && (
         <Modal
-          title="Edit Transaction"
+          title="Edit Task"
           onCancel={() => {
             setEditTask(null);
           }}
@@ -86,6 +86,7 @@ export const DashboardPage =  () => {
       )}
       <TaskList>
         {tasks.map((task) => (
+           <TaskWrapper>
            <TaskItem 
            onClick={() => {
              if (!addTaskVisible) {
@@ -93,8 +94,15 @@ export const DashboardPage =  () => {
              }
            }}
            task={task}
-         ></TaskItem>
-
+         >
+          </TaskItem>
+          <ShowTrackingButton
+          onClick={() => {
+              history.push("/task/" + task.id);
+          }}
+          >
+          </ShowTrackingButton>
+         </TaskWrapper>
         ))}
       </TaskList>
     </Layout>
