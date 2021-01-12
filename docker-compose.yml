@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   db:
     image: mysql:5.7
@@ -12,18 +12,27 @@ services:
       - MYSQL_USER=time-tracker-user
       - MYSQL_PASSWORD=123456789
     ports:
-      - '3306:3306'
+      - "3306:3306"
 
   backend:
     image: node:13
     working_dir: /var/app/backend
     ports:
-      - 3000:3000
+      - 4000:4000
       - 9229:9229
     command: npm start
     volumes:
       - ./packages/backend:/var/app/backend
-      - node_modules:/var/app/backend/node_modules
 
-volumes:
-  node_modules:
+  frontend:
+    image: node:13
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    working_dir: /var/app/frontend
+    ports:
+      - 3000:3000
+    command: npm start
+    stdin_open: true
+    volumes:
+      - ./packages/frontend:/var/app/frontend
+      

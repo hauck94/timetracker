@@ -1,32 +1,28 @@
-# Backend
+
+# Setup Project
 
 The project forms the backend for our web application.
 
+Install npm packages 
+- `docker-compose run backend npm install`
+- `docker-compose run frontend npm install`
+
+Start containers
+- `docker-compose up` / `docker-compose up -d`
+
+Sync database schema
+- `docker-compose exec backend npm run typeorm schema:sync`
+
+(Optional) Add Fixtures
+- `docker-compose exec backend npm run fixtures`
+
+Start Tests
+- `docker-compose exec backend npm run test`
+- `cd .\packages\cypress\`
+- `npx cypress open`
+
 ## Motivation
 The backend is used for data processing between the frontend and the database.
-
-## Installation / Setup
-
- 1. navigate to the FWE-WS20-21-749219-HA1 folder 
- `cd FWE-WS20-21-749219-HA1`
- 
- 2. create Enviroment file 
- `cp ./packages/backend/.env.example ./packages/backend/.env`
- 
- 3. install NPM packages 
- `docker-compose run backend npm install`
- 
- 4. start docker container 
- `docker-compose up -d`
- 
- 5. synchronize database schema 
- `docker-compose exec backend npm run typeorm schema:sync`
- 
- 6. (Optional) Fixtures loading 
- `docker-compose exec backend npm run fixtures`
- 
- 7. perform automated tests 
- `docker-compose exec backend npm run test`
 
 ## Properties
 Trackings cannot exist without a task.
@@ -69,5 +65,3 @@ If the project has been successfully installed, you can perform the following ac
 ## Tests
 The backend can be tested with the command 
 `docker-compose exec backend npm run test`
-<br /><br />
-The following cases are covered: 

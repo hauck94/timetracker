@@ -1,4 +1,3 @@
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,13 +6,14 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToMany,
-} from "typeorm";
-import { Label } from "./label";
-import { Tracking } from "./tracking";
+  JoinTable,
+} from 'typeorm';
+import { Label } from './label';
+import { Tracking } from './tracking';
 
 @Entity()
 export class Task {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
@@ -28,10 +28,16 @@ export class Task {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Tracking, (trackings) => trackings.id, {nullable: true})
+  @OneToMany(() => Tracking, (tracking) => tracking.task, {
+    eager: true,
+    nullable: true,
+  })
   trackings: Tracking[];
 
-  
-  @ManyToMany(() => Label, label => label.tasks, {nullable: true})
+  @ManyToMany(() => Label, (label) => label.tasks, {
+    eager: true,
+    nullable: true,
+  })
+  @JoinTable()
   labels: Label[];
 }

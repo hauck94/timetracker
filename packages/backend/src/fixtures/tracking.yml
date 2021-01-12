@@ -1,0 +1,22 @@
+entity: tracking
+items:
+  Hausaufgaben_Tracker:
+    name: 'Hausaufgaben Tracker'
+    description: 'trackt die Dauer der Hausaufgaben'
+    task: '@Task1'
+  Praktikum_Tracker:
+    name: 'Praktikum Tracker'
+    description: 'trackt die Dauer der Praktikumaufgaben'
+    task: '@Task2'
+  Haushalt_Tracker:
+    name: 'Haushalt Tracker'
+    description: 'trackt die Dauer des Aufräumens in der Küche'
+    task: '@Task3'
+  Fitness_Tracker_Oberkörper:
+    name: 'Fitness Oberkörper Tracker'
+    description: 'trackt die Dauer des Oberkörper Workouts'
+    task: '@Task4'
+  Fitness_Tracker_Unterkörper:
+    name: 'Fitness Unterkörper Tracker'
+    description: 'trackt die Dauer des Unterkörper Workouts'
+    task: '@Task5'

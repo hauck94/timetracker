@@ -1,16 +1,9 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-} from "typeorm";
-import { Task } from "./task";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { Task } from './task';
 
 @Entity()
 export class Tracking {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
@@ -19,10 +12,10 @@ export class Tracking {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   startTime: string;
 
-  @Column()
+  @Column({ nullable: true })
   endTime: string;
 
   @CreateDateColumn()
@@ -31,6 +24,10 @@ export class Tracking {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => Task, (task) => task.trackings, {nullable: false})
+  // delete cascade, da tracking nicht ohne Task existieren kann und somit mit gelöscht werden soll
+  @ManyToOne(() => Task, (task) => task.trackings, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   task: Task;
 }

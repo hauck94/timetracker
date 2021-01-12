@@ -1,0 +1,27 @@
+entity: task
+items:
+  Task1:
+    name: 'Hausaufgabe FWE'
+    description: 'Hausaufgabe für den Kurs FWE bis Dezember fertigstellen.'
+    labels: 
+      - '@Uni'
+  Task2:
+    name: 'Praktikum Genetische Algorithmen'
+    description: 'Praktikum bis Januar bearbeiten.'
+    labels: 
+      - '@Uni'
+  Task3:
+    name: 'Küche aufräumen'
+    description: 'Küche aufräumen und reinigen.'
+    labels: 
+      - '@Haushalt'
+  Task4:
+    name: 'Oberkörper Training'
+    description: '100 Liegestütze und 40 Dips'
+    labels: 
+      - '@Fitness'
+  Task5:
+    name: 'Unterkörper Training'
+    description: '100 Ausfallschritte und 100 Kniebeuge.'
+    labels: 
+      - '@Fitness'

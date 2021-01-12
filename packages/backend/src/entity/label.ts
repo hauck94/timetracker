@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, JoinTable, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany } from 'typeorm';
 import { Task } from './task';
 
 @Entity()
 export class Label {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
@@ -11,12 +11,10 @@ export class Label {
 
   @CreateDateColumn()
   created: string;
-  
+
   @UpdateDateColumn()
   updatedAt: string;
 
-  
-  @ManyToMany(() => Task, task => task.labels, {nullable: true})
-  @JoinTable() // owner side of the relationship.
+  @ManyToMany(() => Task, (task) => task.labels, { nullable: true })
   tasks: Task[];
 }
